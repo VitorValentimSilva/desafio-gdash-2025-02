@@ -1,4 +1,3 @@
-version: "3.8"
 services:
   rabbitmq:
     image: rabbitmq:3-management
@@ -9,15 +8,63 @@ services:
     environment:
       RABBITMQ_DEFAULT_USER: guest
       RABBITMQ_DEFAULT_PASS: guest
+    networks:
+      - appnet
 
-  weather-producer:
-    build: .
+  mongo:
+    image: mongo:6
+    restart: unless-stopped
+    volumes:
+      - mongo-data:/data/db
+    ports:
+      - "27017:27017"
+    networks:
+      - appnet
+
+  nest-api:
+    build: ./services/nest-api
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+      - PORT=3000
+      - MONGO_URI=mongodb://mongo:27017/weather
+    depends_on:
+      - mongo
+    networks:
+      - appnet
+
+  go-worker:
+    build: ./services/go-worker
+    environment:
+      - RABBITMQ_URL=amqp://guest:guest@rabbitmq:5672/
+      - RABBITMQ_QUEUE=weather_queue
+      - NEST_API_URL=http://nest-api:3000
+      - WORKER_MAX_RETRIES=3
+      - WORKER_HTTP_TIMEOUT_SECONDS=10
     depends_on:
       - rabbitmq
+      - nest-api
+    networks:
+      - appnet
+
+  weather-producer:
+    build: ./services/python-producer
     environment:
-      - LAT=-23.55052
-      - LON=-46.633308
-      - CITY=São Paulo
+      - LAT=-22.12556
+      - LON=-51.38889
+      - CITY=Presidente Prudente
       - INTERVAL_SECONDS=3600
       - RABBITMQ_URL=amqp://guest:guest@rabbitmq:5672/
       - RABBITMQ_QUEUE=weather_queue
+    depends_on:
+      - rabbitmq
+    networks:
+      - appnet
+
+volumes:
+  mongo-data:
+
+networks:
+  appnet:
+    driver: bridge
