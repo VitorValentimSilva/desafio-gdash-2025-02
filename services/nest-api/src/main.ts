@@ -23,11 +23,18 @@ async function createDefaultAdmin(app: INestApplication<any>) {
 
 async function bootstrap() {
   dotenv.config();
-  const app = await NestFactory.create(AppModule);
+
+  const app = await NestFactory.create(AppModule, {
+    cors: {
+      origin: 'http://localhost:5173',
+      credentials: true,
+    },
+  });
 
   app.use(helmet());
   app.setGlobalPrefix('api');
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
+
   const port = process.env.PORT ? parseInt(process.env.PORT) : 3000;
   await createDefaultAdmin(app);
   await app.listen(port);
