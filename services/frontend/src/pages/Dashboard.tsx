@@ -1,130 +1,133 @@
-import { useEffect, useState } from "react";
-import api from "../lib/api";
-import WeatherCard from "@/components/WeatherCard";
-import WeatherChart from "@/components/WeatherChart";
-import InsightsPanel, { type Insight } from "@/components/InsightsPanel";
 import WeatherTable from "@/components/WeatherTable";
+import WeatherHeroCard from "@/components/WeatherHeroCard";
+import InsightCard from "@/components/InsightCard";
+import TemperatureChart from "@/components/TemperatureChart";
+import PrecipitationChart from "@/components/PrecipitationChart";
 
-interface WeatherLog {
-  collected_at: string;
-  current?: {
-    temperature_c?: number;
-    relative_humidity_percent?: number;
-    wind_speed_m_s?: number;
-    weathercode?: string | number;
-    [key: string]: unknown;
-  };
-  [key: string]: unknown;
-}
+const currentWeather = {
+  location: "São Paulo, BR",
+  temperature: "23°C",
+  condition: "clear",
+  humidity: "78%",
+  wind: "12 km/h",
+  pressure: "1013 hPa",
+};
+
+const insights = [
+  {
+    text: "Alta chance de chuva nas próximas 3 horas — leve um guarda-chuva.",
+    type: "warning" as const,
+  },
+  {
+    text: "Tarde mais amena que o normal para a época — risco reduzido de calor extremo.",
+    type: "info" as const,
+  },
+  {
+    text: "Picos de chuva entre 09:00 e 13:00 — atenção às enchentes locais.",
+    type: "danger" as const,
+  },
+];
+
+const temperatureData = [
+  { hour: "00:00", temp: 22 },
+  { hour: "01:00", temp: 21 },
+  { hour: "02:00", temp: 21 },
+  { hour: "03:00", temp: 20 },
+  { hour: "04:00", temp: 20 },
+  { hour: "05:00", temp: 21 },
+  { hour: "06:00", temp: 22 },
+  { hour: "07:00", temp: 23 },
+  { hour: "08:00", temp: 24 },
+  { hour: "09:00", temp: 25 },
+  { hour: "10:00", temp: 26 },
+  { hour: "11:00", temp: 27 },
+  { hour: "12:00", temp: 28 },
+  { hour: "13:00", temp: 28 },
+  { hour: "14:00", temp: 27 },
+  { hour: "15:00", temp: 26 },
+  { hour: "16:00", temp: 25 },
+  { hour: "17:00", temp: 24 },
+  { hour: "18:00", temp: 24 },
+  { hour: "19:00", temp: 23 },
+  { hour: "20:00", temp: 23 },
+  { hour: "21:00", temp: 22 },
+  { hour: "22:00", temp: 22 },
+  { hour: "23:00", temp: 22 },
+];
+
+const precipitationData = [
+  60, 55, 50, 48, 45, 50, 58, 65, 70, 75, 80, 85, 80, 78, 70, 60, 55, 50, 45,
+  40, 35, 30, 25, 20,
+];
+
+const tableData = [
+  {
+    datetime: "2025-11-24 09:00",
+    location: "São Paulo",
+    condition: "Chuvoso",
+    temp: "23°C",
+    humidity: "78%",
+  },
+  {
+    datetime: "2025-11-24 06:00",
+    location: "São Paulo",
+    condition: "Nublado",
+    temp: "21°C",
+    humidity: "80%",
+  },
+  {
+    datetime: "2025-11-23 18:00",
+    location: "São Paulo",
+    condition: "Ensolarado",
+    temp: "26°C",
+    humidity: "60%",
+  },
+  {
+    datetime: "2025-11-23 12:00",
+    location: "São Paulo",
+    condition: "Ensolarado",
+    temp: "28°C",
+    humidity: "55%",
+  },
+  {
+    datetime: "2025-11-22 15:00",
+    location: "São Paulo",
+    condition: "Chuva Forte",
+    temp: "22°C",
+    humidity: "85%",
+  },
+  {
+    datetime: "2025-11-22 09:00",
+    location: "São Paulo",
+    condition: "Chuvisco",
+    temp: "20°C",
+    humidity: "88%",
+  },
+];
 
 export default function Dashboard() {
-  const [logs, setLogs] = useState<WeatherLog[]>([]);
-  const [insight, setInsight] = useState<Insight>();
-  const [loading, setLoading] = useState(false);
-
-  const fetch = async () => {
-    setLoading(true);
-    try {
-      const r = await api.get("/weather/logs?page=1&limit=50");
-      setLogs(r.data.data ?? []);
-      const i = await api.get("/weather/insights?period=24");
-      setInsight(i.data);
-    } catch (e) {
-      console.error(e);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetch();
-  }, []);
-
-  const latest = logs[0];
-
   return (
-    <div className="space-y-6">
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <WeatherCard
-          title="Temperatura"
-          value={latest?.current?.temperature_c ?? "—"}
-          unit="°C"
-        />
-        <WeatherCard
-          title="Umidade"
-          value={latest?.current?.relative_humidity_percent ?? "—"}
-          unit="%"
-        />
-        <WeatherCard
-          title="Vento"
-          value={latest?.current?.wind_speed_m_s ?? "—"}
-          unit="m/s"
-        />
-        <WeatherCard
-          title="Condição"
-          value={latest?.current?.weathercode ?? "—"}
-          unit={""}
-        />
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        <div className="lg:col-span-2 bg-white p-4 rounded shadow">
-          <h3 className="text-lg mb-2">Temperatura (últimos registros)</h3>
-          <WeatherChart
-            data={logs
-              .filter((l) => typeof l.current?.temperature_c === "number")
-              .map((l) => ({
-                time: l.collected_at,
-                temp: l.current!.temperature_c as number,
-              }))}
-          />
-          <div className="mt-3 flex gap-2">
-            <button
-              onClick={() =>
-                window.open(
-                  `${import.meta.env.VITE_API_URL}/weather/export.csv`,
-                  "_blank`"
-                )
-              }
-              className="px-3 py-1 bg-slate-200 rounded"
-            >
-              Export CSV
-            </button>
-            <button
-              onClick={() =>
-                window.open(
-                  `${import.meta.env.VITE_API_URL}/weather/export.xlsx`,
-                  "_blank`"
-                )
-              }
-              className="px-3 py-1 bg-slate-200 rounded"
-            >
-              Export XLSX
-            </button>
-          </div>
+    <>
+      <div className="grid lg:grid-cols-3 gap-6 mb-6">
+        <div className="lg:col-span-2">
+          <WeatherHeroCard {...currentWeather} />
         </div>
 
-        <div className="bg-white p-4 rounded shadow">
-          <h3 className="text-lg mb-2">Insights</h3>
-          <InsightsPanel insight={insight} />
+        <div className="space-y-4">
+          <h3 className="text-lg font-semibold px-1">Insights de IA</h3>
+
+          {insights.map((insight, index) => (
+            <InsightCard key={index} {...insight} />
+          ))}
         </div>
       </div>
 
-      <div className="bg-white p-4 rounded shadow">
-        <h3 className="text-lg mb-2">Registros</h3>
-        <WeatherTable
-          rows={logs.map((log) => ({
-            id: log.collected_at,
-            collected_at: log.collected_at,
-            location:
-              typeof log.location === "object" && log.location !== null && "city" in log.location
-                ? { city: (log.location as { city?: string }).city }
-                : undefined,
-            current: log.current,
-          }))}
-          loading={loading}
-        />
+      <div className="grid lg:grid-cols-2 gap-6 mb-6">
+        <TemperatureChart data={temperatureData} />
+        <PrecipitationChart data={precipitationData} />
       </div>
-    </div>
+
+      <WeatherTable data={tableData} />
+    </>
   );
 }

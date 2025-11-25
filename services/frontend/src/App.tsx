@@ -4,6 +4,7 @@ import Layout from "./components/Layout";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import NotFound from "./pages/NotFound";
+import Pokedex from "./pages/Pokedex";
 
 interface PrivateRouteProps {
   children: React.ReactNode;
@@ -27,6 +28,16 @@ export default function App() {
                 <Dashboard />
               </Layout>
             </PrivateRoute>
+          }
+        />
+        <Route
+          path="/pokedex"
+          element={
+            <>
+              <Layout>
+                <Pokedex />
+              </Layout>
+            </>
           }
         />
         <Route path="*" element={<NotFound />} />

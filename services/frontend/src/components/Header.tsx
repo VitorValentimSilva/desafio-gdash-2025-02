@@ -3,6 +3,7 @@ import MobileNav from "./MobileNav";
 import { Link } from "react-router-dom";
 import { ModeToggle } from "./ui/mode-toggle";
 import ProfileModal from "./ProfileModal";
+import { getToken } from "@/lib/auth";
 
 interface HeaderProps {
   title: string;
@@ -14,6 +15,8 @@ interface HeaderProps {
 }
 
 export default function Header({ title, navItems }: HeaderProps) {
+  const token = getToken();
+
   return (
     <header className="border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-50">
       <div className="container mx-auto px-4 py-4">
@@ -47,14 +50,17 @@ export default function Header({ title, navItems }: HeaderProps) {
 
           <div className="flex items-center gap-2">
             <ModeToggle />
-            <ProfileModal
-              title="Perfil de usuário"
-              description="Gerencie as informações e preferências do seu perfil."
-              tabsTriggers={[
-                { title: "Perfil", value: "profile" },
-                { title: "Configurações", value: "settings" },
-              ]}
-            />
+
+            {token && (
+              <ProfileModal
+                title="Perfil de usuário"
+                description="Gerencie as informações e preferências do seu perfil."
+                tabsTriggers={[
+                  { title: "Perfil", value: "profile" },
+                  { title: "Configurações", value: "settings" },
+                ]}
+              />
+            )}
           </div>
         </div>
       </div>
