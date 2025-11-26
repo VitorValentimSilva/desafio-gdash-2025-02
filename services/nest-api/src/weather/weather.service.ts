@@ -135,38 +135,98 @@ export class WeatherService {
     return Buffer.from(buf);
   }
 
-  async computeInsights(period = 24): Promise<{
-    generated_at: string;
-    samples: number;
-    average_temperature_c: number | null;
-    text: string;
-  }> {
-    const rows = (await this.weatherModel
+  async computeInsights(period = 24) {
+    const rows = await this.weatherModel
       .find()
       .sort({ createdAt: -1 })
       .limit(period)
       .lean()
-      .exec()) as Record<string, unknown>[];
+      .exec();
 
-    const temps: number[] = [];
-    for (const r of rows) {
-      const current = r.current as Record<string, unknown> | undefined;
-      const t = current?.temperature_c ?? current?.temperature;
-      if (t !== null && typeof t === 'number') temps.push(t);
+    if (!rows.length) {
+      return {
+        generated_at: new Date().toISOString(),
+        samples: 0,
+        summary: 'Sem dados suficientes.',
+        alerts: [],
+      };
     }
 
-    const avg = temps.length
-      ? temps.reduce((a, b) => a + b, 0) / temps.length
+    const temps: number[] = [];
+    const hums: number[] = [];
+    const rains: number[] = [];
+
+    for (const r of rows) {
+      const c = r.current || {};
+      if (typeof c.temperature_c === 'number') temps.push(c.temperature_c);
+      if (typeof c.relative_humidity_percent === 'number')
+        hums.push(c.relative_humidity_percent);
+      if (typeof c.precipitation_probability_percent === 'number')
+        rains.push(c.precipitation_probability_percent);
+    }
+
+    const avgTemp = temps.length
+      ? temps.reduce((a, b) => a + b) / temps.length
       : null;
-    const insight = {
-      generated_at: new Date().toISOString(),
-      samples: temps.length,
-      average_temperature_c: avg,
-      text:
-        avg != null
-          ? `A temperatura média dos últimos ${temps.length} registros é ${avg.toFixed(1)} °C`
-          : 'Dados insuficientes',
+    const avgHum = hums.length
+      ? hums.reduce((a, b) => a + b) / hums.length
+      : null;
+
+    let trend: 'rising' | 'falling' | 'stable' = 'stable';
+    if (temps.length > 6) {
+      const firstAvg = temps.slice(-6).reduce((a, b) => a + b) / 6;
+      const lastAvg = temps.slice(0, 6).reduce((a, b) => a + b) / 6;
+      if (lastAvg > firstAvg + 1) trend = 'rising';
+      else if (lastAvg < firstAvg - 1) trend = 'falling';
+    }
+
+    const comfort =
+      avgTemp && avgHum
+        ? Math.max(
+            0,
+            100 - Math.abs(avgTemp - 22) * 2 - Math.abs(avgHum - 55) * 0.5,
+          )
+        : null;
+
+    const classify = (t: number | null) => {
+      if (t == null) return 'desconhecido';
+      if (t < 12) return 'frio';
+      if (t < 18) return 'agradável';
+      if (t < 26) return 'quente';
+      return 'muito quente';
     };
-    return insight;
+
+    const classification = classify(avgTemp);
+
+    const alerts: string[] = [];
+
+    const rainAvg = rains.length
+      ? rains.reduce((a, b) => a + b) / rains.length
+      : 0;
+
+    if (rainAvg > 60) alerts.push('Alta chance de chuva');
+    if (avgTemp && avgTemp > 30) alerts.push('Calor extremo');
+    if (avgTemp && avgTemp < 10) alerts.push('Frio intenso');
+
+    const summary = `
+      Nos últimos ${rows.length} registros:
+      - Temperatura média: ${avgTemp?.toFixed(1)}°C
+      - Umidade média: ${avgHum?.toFixed(0)}%
+      - Tendência: ${trend}
+      - Classificação: ${classification}
+      - Comfort score: ${comfort?.toFixed(0)}
+      `.trim();
+
+    return {
+      generated_at: new Date().toISOString(),
+      samples: rows.length,
+      avg_temperature: avgTemp,
+      avg_humidity: avgHum,
+      temp_trend: trend,
+      comfort_score: Math.round(comfort ?? 0),
+      condition_classification: classification,
+      alerts,
+      summary,
+    };
   }
 }

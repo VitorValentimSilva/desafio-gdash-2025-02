@@ -10,28 +10,28 @@ export default function InsightCard({ text, type = "info" }: InsightCardProps) {
   const getIcon = () => {
     switch (type) {
       case "warning":
-        return <AlertTriangle className="w-5 h-5 text-accent" />;
+        return <AlertTriangle className="w-5 h-5 text-yellow-400" />;
       case "danger":
-        return <AlertCircle className="w-5 h-5 text-destructive" />;
+        return <AlertCircle className="w-5 h-5 text-red-400" />;
       default:
-        return <Info className="w-5 h-5 text-primary" />;
+        return <Info className="w-5 h-5 text-sky-400" />;
     }
   };
 
   const getBgClass = () => {
     switch (type) {
       case "warning":
-        return "bg-accent/10 border-accent/20";
+        return "bg-yellow-800/10 border-yellow-800/20";
       case "danger":
-        return "bg-destructive/10 border-destructive/20";
+        return "bg-red-800/10 border-red-800/20";
       default:
-        return "bg-primary/10 border-primary/20";
+        return "bg-sky-800/6 border-sky-800/12";
     }
   };
 
   return (
-    <Card className={`p-4 ${getBgClass()} hover-lift animate-slide-up`}>
-      <div className="flex gap-3">
+    <Card className={`p-4 ${getBgClass()} border rounded-lg shadow-sm`}>
+      <div className="flex gap-3 items-start">
         <div className="shrink-0 mt-0.5">{getIcon()}</div>
         <p className="text-sm text-foreground leading-relaxed">{text}</p>
       </div>

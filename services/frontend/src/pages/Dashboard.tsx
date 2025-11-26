@@ -2,24 +2,9 @@ import { weatherCodeToText } from "@/lib/weather";
 import { useWeatherLogs } from "@/hooks/useWeatherLogs";
 import WeatherTable from "@/components/weather/WeatherTable";
 import WeatherHeroCard from "@/components/weather/WeatherHeroCard";
-import InsightCard from "@/components/weather/InsightCard";
 import TemperatureChart from "@/components/weather/TemperatureChart";
 import PrecipitationChart from "@/components/weather/PrecipitationChart";
-
-const insights = [
-  {
-    text: "Alta chance de chuva nas próximas 3 horas — leve um guarda-chuva.",
-    type: "warning" as const,
-  },
-  {
-    text: "Tarde mais amena que o normal para a época — risco reduzido de calor extremo.",
-    type: "info" as const,
-  },
-  {
-    text: "Picos de chuva entre 09:00 e 13:00 — atenção às enchentes locais.",
-    type: "danger" as const,
-  },
-];
+import InsightsPanel from "@/components/insights/InsightsPanel";
 
 const temperatureData = [
   { hour: "00:00", temp: 22 },
@@ -105,29 +90,23 @@ export default function Dashboard() {
 
   return (
     <>
-      <div className="grid lg:grid-cols-3 gap-6 mb-6">
-        <div className="lg:col-span-2">
+      <div className="grid gap-10 mb-6">
+        <div>
           {latest ? (
             <WeatherHeroCard
               city={latest.location.city}
               temperature={`${latest.current.temperature_c}°C`}
               condition={weatherCodeToText(latest.current.weathercode)}
-              humidity={`${latest.current.relative_humidity_percent}%`}
-              wind={`${latest.current.wind_speed_m_s} m/s`}
-              pressure={`${latest.current.pressure_msl_hpa} hPa`}
+              humidity={`${latest.current.relative_humidity_percent ?? "—"}%`}
+              wind={`${latest.current.wind_speed_m_s ?? "—"} m/s`}
+              pressure={`${latest.current.pressure_msl_hpa ?? "—"} hPa`}
             />
           ) : (
             <p className="text-white">Carregando clima...</p>
           )}
         </div>
 
-        <div className="space-y-4">
-          <h3 className="text-lg font-semibold px-1">Insights de IA</h3>
-
-          {insights.map((insight, index) => (
-            <InsightCard key={index} {...insight} />
-          ))}
-        </div>
+        <InsightsPanel />
       </div>
 
       <div className="grid lg:grid-cols-2 gap-6 mb-6">

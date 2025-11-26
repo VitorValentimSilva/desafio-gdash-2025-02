@@ -372,4 +372,68 @@
   .animate-pulse-glow {
     animation: pulseGlow 3s ease-in-out infinite;
   }
+
+  @keyframes rain-drop {
+    0% {
+      transform: translateY(-6px);
+      opacity: 1;
+    }
+    100% {
+      transform: translateY(6px);
+      opacity: 0;
+    }
+  }
+  .animate-rain-drop {
+    animation: rain-drop 0.9s linear infinite;
+  }
+
+  @keyframes snow {
+    0% {
+      transform: translateY(-4px);
+      opacity: 1;
+    }
+    100% {
+      transform: translateY(8px);
+      opacity: 0.2;
+    }
+  }
+  .animate-snowflake {
+    animation: snow 1.5s linear infinite;
+  }
+
+  @keyframes sun-rotate {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+  .animate-sun-rotate {
+    animation: sun-rotate 8s linear infinite;
+  }
+
+  @keyframes cloud-float {
+    0% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-4px);
+    }
+    100% {
+      transform: translateY(0);
+    }
+  }
+  .animate-cloud-float {
+    animation: cloud-float 6s ease-in-out infinite;
+  }
+
+  .recharts-default-tooltip {
+    border-radius: 12px;
+    background-color: hsl(var(--background)) !important;
+  }
+
+  .recharts-tooltip-label {
+    color: hsl(var(--foreground)) !important;
+  }
 }

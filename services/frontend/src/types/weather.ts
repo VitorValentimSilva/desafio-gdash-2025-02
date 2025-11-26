@@ -1,16 +1,19 @@
 export interface WeatherLog {
+  id?: string;
   collected_at: string;
   location: {
     city: string;
+    latitude?: number;
+    longitude?: number;
   };
   current: {
-    temperature_c: number;
-    relative_humidity_percent: number;
-    wind_speed_m_s: number;
-    pressure_msl_hpa: number;
-    weathercode: string | number;
-    [key: string]: unknown;
+    time?: string;
+    temperature_c?: number;
+    relative_humidity_percent?: number | null;
+    wind_speed_m_s?: number | null;
+    weathercode?: number | string;
+    pressure_msl_hpa?: number | null;
+    [k: string]: unknown;
   };
-
-  [key: string]: unknown;
+  raw?: unknown;
 }

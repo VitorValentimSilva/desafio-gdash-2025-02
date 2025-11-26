@@ -1,65 +1,51 @@
-export type WeatherCode = number | string;
+export function weatherCodeToText(code: number | string | undefined): string {
+  if (code === undefined || code === null) return "Desconhecido";
+  const c = typeof code === "string" ? parseInt(code, 10) : code;
 
-const codeMap: Record<number, string> = {
-  0: "Ensolarado",
-  1: "Parcialmente nublado",
-  2: "Nublado",
-  3: "Nuvens altas",
-  45: "Nevoeiro",
-  48: "Nevoeiro com gelo",
-  51: "Chuvisco leve",
-  53: "Chuvisco moderado",
-  55: "Chuvisco forte",
-  56: "Chuvisco congelante leve",
-  57: "Chuvisco congelante forte",
-  61: "Chuva leve",
-  63: "Chuva moderada",
-  65: "Chuva forte",
-  66: "Chuva congelante leve",
-  67: "Chuva congelante forte",
-  71: "Neve fraca",
-  73: "Neve moderada",
-  75: "Neve forte",
-  77: "Granizo",
-  80: "Pancadas de chuva (leve)",
-  81: "Pancadas de chuva (moderada)",
-  82: "Pancadas de chuva (forte)",
-  85: "Pancadas de neve",
-  86: "Pancadas de neve forte",
-  95: "Trovoada",
-  96: "Trovoada com granizo leve",
-  99: "Trovoada com granizo forte",
-};
-
-export function weatherCodeToText(code: WeatherCode): string {
-  if (code === null || code === undefined) return "Desconhecido";
-  const n =
-    typeof code === "string" && code.trim() !== ""
-      ? Number(code)
-      : (code as number);
-  if (!Number.isFinite(n)) return String(code);
-  return codeMap[n] ?? "Condição desconhecida";
+  if (c >= 0 && c <= 1) return "Ensolarado";
+  if (c === 2) return "Parcialmente nublado";
+  if (c === 3) return "Nublado";
+  if (c >= 45 && c <= 48) return "Neblina";
+  if (c >= 51 && c <= 67) return "Chuva/Chuvisco";
+  if (c >= 71 && c <= 77) return "Nevando";
+  if (c >= 80 && c <= 82) return "Chuvas esparsas";
+  if (c >= 85 && c <= 86) return "Neve";
+  if (c >= 95) return "Tempestade/Tempestade com trovões";
+  return "Desconhecido";
 }
 
-export type WeatherCategory =
-  | "rain"
-  | "snow"
-  | "thunder"
+export function weatherCodeToCategory(
+  code: number
+):
   | "sun"
   | "cloud"
   | "fog"
+  | "rain"
   | "drizzle"
-  | "unknown";
+  | "snow"
+  | "thunder"
+  | "unknown" {
+  if (code >= 0 && code <= 1) return "sun";
+  if (code === 2) return "cloud";
+  if (code === 3) return "cloud";
+  if (code >= 45 && code <= 48) return "fog";
+  if (code >= 51 && code <= 55) return "drizzle";
+  if (code >= 56 && code <= 67) return "rain";
+  if (code >= 71 && code <= 77) return "snow";
+  if (code >= 80 && code <= 82) return "rain";
+  if (code >= 85 && code <= 86) return "snow";
 
-export function weatherCodeToCategory(code: WeatherCode): WeatherCategory {
-  const n = typeof code === "string" ? Number(code) : (code as number);
-  if (!Number.isFinite(n)) return "unknown";
-  if (n === 0) return "sun";
-  if ([1, 2, 3].includes(n)) return "cloud";
-  if ([45, 48].includes(n)) return "fog";
-  if ([51, 53, 55, 56, 57].includes(n)) return "drizzle";
-  if ([61, 63, 65, 66, 67, 80, 81, 82].includes(n)) return "rain";
-  if ([71, 73, 75, 77, 85, 86].includes(n)) return "snow";
-  if ([95, 96, 99].includes(n)) return "thunder";
+  if (code >= 95) return "thunder";
+
   return "unknown";
+}
+
+export function formatTemp(t?: number | null) {
+  if (t == null || Number.isNaN(t)) return "—";
+  return `${Math.round(t)}°C`;
+}
+
+export function formatHumidity(h?: number | null) {
+  if (h == null || Number.isNaN(h)) return "—";
+  return `${Math.round(h)}%`;
 }

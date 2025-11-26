@@ -2,7 +2,7 @@ import { Cloud, CloudRain, Sun, Zap } from "lucide-react";
 import { weatherCodeToCategory } from "@/lib/weather";
 
 interface AnimatedWeatherIconProps {
-  condition: string | number;
+  condition: number | string;
   className?: string;
 }
 
@@ -13,33 +13,7 @@ export default function AnimatedWeatherIcon({
   const category =
     typeof condition === "number"
       ? weatherCodeToCategory(condition)
-      : ((): ReturnType<typeof weatherCodeToCategory> => {
-          const t = String(condition).toLowerCase();
-          if (
-            t.includes("chuva") ||
-            t.includes("pancada") ||
-            t.includes("rain")
-          )
-            return "rain";
-          if (t.includes("chuvisco") || t.includes("drizzle")) return "drizzle";
-          if (t.includes("neve") || t.includes("snow")) return "snow";
-          if (
-            t.includes("trovo") ||
-            t.includes("thunder") ||
-            t.includes("trovoada")
-          )
-            return "thunder";
-          if (t.includes("nevoeiro") || t.includes("fog")) return "fog";
-          if (
-            t.includes("ensolarado") ||
-            t.includes("sun") ||
-            t.includes("claro")
-          )
-            return "sun";
-          if (t.includes("nuv") || t.includes("cloud") || t.includes("nublado"))
-            return "cloud";
-          return "unknown";
-        })();
+      : weatherCodeToCategory(Number(condition) || -1);
 
   if (category === "rain" || category === "drizzle") {
     return (
@@ -48,6 +22,7 @@ export default function AnimatedWeatherIcon({
           className="w-full h-full text-white/95 drop-shadow-md"
           strokeWidth={1.6}
         />
+
         <div className="absolute inset-0 pointer-events-none">
           <span
             className="absolute left-1/4 top-3/4 w-px h-4 rounded bg-white/80 animate-rain-drop"
@@ -69,25 +44,10 @@ export default function AnimatedWeatherIcon({
   if (category === "sun") {
     return (
       <div className={`relative ${className}`} aria-hidden>
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="relative w-3/4 h-3/4">
-            <Sun
-              className="w-full h-full text-yellow-300 drop-shadow-lg"
-              strokeWidth={1.6}
-            />
-            <div className="absolute inset-0 animate-sun-rotate">
-              {[...Array(8)].map((_, i) => (
-                <div
-                  key={i}
-                  className="absolute top-1/2 left-1/2 w-0.5 h-6 bg-yellow-200 opacity-40 rounded"
-                  style={{
-                    transform: `rotate(${i * 45}deg) translateY(-34px)`,
-                  }}
-                />
-              ))}
-            </div>
-          </div>
-        </div>
+        <Sun
+          className="w-full h-full text-yellow-300 drop-shadow-lg"
+          strokeWidth={1.6}
+        />
       </div>
     );
   }
@@ -96,6 +56,7 @@ export default function AnimatedWeatherIcon({
     return (
       <div className={`relative ${className}`} aria-hidden>
         <Cloud className="w-full h-full text-white/90" strokeWidth={1.6} />
+
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute left-1/3 top-3/4 text-white/90 animate-snowflake">
             ❄
@@ -121,6 +82,7 @@ export default function AnimatedWeatherIcon({
     return (
       <div className={`relative ${className}`} aria-hidden>
         <Cloud className="w-full h-full text-white/90" strokeWidth={1.6} />
+
         <div className="absolute inset-0 flex items-center justify-center">
           <Zap className="w-8 h-12 text-yellow-200 drop-shadow-xl animate-flash" />
         </div>
@@ -132,6 +94,7 @@ export default function AnimatedWeatherIcon({
     return (
       <div className={`relative ${className}`} aria-hidden>
         <Cloud className="w-full h-full text-white/85" strokeWidth={1.6} />
+
         <div className="absolute inset-0 bg-linear-to-b from-transparent via-white/5 to-transparent blur-sm" />
       </div>
     );
