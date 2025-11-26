@@ -36,9 +36,6 @@ services:
 
   nest-api:
     build: ./services/nest-api
-    command: npm run start:dev
-    volumes:
-      - ./services/nest-api:/app
     ports:
       - "3000:3000"
     environment:
@@ -71,8 +68,6 @@ services:
 
   weather-producer:
     build: ./services/python-producer
-    volumes:
-      - ./services/python-producer:/app
     environment:
       - LAT=-22.12556
       - LON=-51.38889

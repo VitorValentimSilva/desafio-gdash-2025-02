@@ -1,17 +1,10 @@
-import WeatherTable from "@/components/WeatherTable";
-import WeatherHeroCard from "@/components/WeatherHeroCard";
-import InsightCard from "@/components/InsightCard";
-import TemperatureChart from "@/components/TemperatureChart";
-import PrecipitationChart from "@/components/PrecipitationChart";
-
-const currentWeather = {
-  location: "São Paulo, BR",
-  temperature: "23°C",
-  condition: "clear",
-  humidity: "78%",
-  wind: "12 km/h",
-  pressure: "1013 hPa",
-};
+import { weatherCodeToText } from "@/lib/weather";
+import { useWeatherLogs } from "@/hooks/useWeatherLogs";
+import WeatherTable from "@/components/weather/WeatherTable";
+import WeatherHeroCard from "@/components/weather/WeatherHeroCard";
+import InsightCard from "@/components/weather/InsightCard";
+import TemperatureChart from "@/components/weather/TemperatureChart";
+import PrecipitationChart from "@/components/weather/PrecipitationChart";
 
 const insights = [
   {
@@ -106,11 +99,26 @@ const tableData = [
 ];
 
 export default function Dashboard() {
+  const { logs } = useWeatherLogs();
+
+  const latest = logs[0];
+
   return (
     <>
       <div className="grid lg:grid-cols-3 gap-6 mb-6">
         <div className="lg:col-span-2">
-          <WeatherHeroCard {...currentWeather} />
+          {latest ? (
+            <WeatherHeroCard
+              city={latest.location.city}
+              temperature={`${latest.current.temperature_c}°C`}
+              condition={weatherCodeToText(latest.current.weathercode)}
+              humidity={`${latest.current.relative_humidity_percent}%`}
+              wind={`${latest.current.wind_speed_m_s} m/s`}
+              pressure={`${latest.current.pressure_msl_hpa} hPa`}
+            />
+          ) : (
+            <p className="text-white">Carregando clima...</p>
+          )}
         </div>
 
         <div className="space-y-4">

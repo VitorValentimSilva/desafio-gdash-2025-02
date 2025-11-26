@@ -1,9 +1,9 @@
-import { CloudRain } from "lucide-react";
-import MobileNav from "./MobileNav";
 import { Link } from "react-router-dom";
-import { ModeToggle } from "./ui/mode-toggle";
-import ProfileModal from "./ProfileModal";
+import { CloudRain } from "lucide-react";
 import { getToken } from "@/lib/auth";
+import { ModeToggle } from "@/components/ui/mode-toggle";
+import MobileNav from "@/components/MobileNav";
+import ProfileModal from "@/components/ProfileModal";
 
 interface HeaderProps {
   title: string;

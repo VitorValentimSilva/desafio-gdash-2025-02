@@ -1,9 +1,9 @@
 import { Droplets, Gauge, Wind } from "lucide-react";
-import { Card } from "./ui/card";
-import AnimatedWeatherIcon from "./AnimatedWeatherIcon";
+import { Card } from "@/components/ui/card";
+import AnimatedWeatherIcon from "@/components/weather/AnimatedWeatherIcon";
 
 interface WeatherHeroCardProps {
-  location: string;
+  city: string;
   temperature: string;
   condition: string;
   humidity: string;
@@ -12,7 +12,7 @@ interface WeatherHeroCardProps {
 }
 
 export default function WeatherHeroCard({
-  location,
+  city,
   temperature,
   condition,
   humidity,
@@ -29,7 +29,7 @@ export default function WeatherHeroCard({
       <div className="relative z-10">
         <div className="flex items-start justify-between mb-8">
           <div>
-            <h2 className="text-white/80 text-lg mb-2">{location}</h2>
+            <h2 className="text-white/80 text-lg mb-2">{city}</h2>
 
             <div className="text-7xl font-bold text-white mb-2">
               {temperature}

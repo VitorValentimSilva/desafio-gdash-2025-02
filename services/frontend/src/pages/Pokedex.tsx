@@ -1,8 +1,8 @@
+import { useState } from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { ChevronLeft, ChevronRight } from "lucide-react";
-import { useState } from "react";
 
 const samplePokemon = [
   {
@@ -219,7 +219,7 @@ export default function Pokedex() {
               <p className="text-muted-foreground mb-6">
                 {selectedPokemon.desc}
               </p>
-              
+
               <Button
                 onClick={() => setSelectedPokemon(null)}
                 className="w-full"

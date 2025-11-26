@@ -1,10 +1,10 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
-import { getToken } from "./lib/auth";
-import Layout from "./components/Layout";
-import Login from "./pages/Login";
-import Dashboard from "./pages/Dashboard";
-import NotFound from "./pages/NotFound";
-import Pokedex from "./pages/Pokedex";
+import { getToken } from "@/lib/auth";
+import Login from "@/pages/Login";
+import Dashboard from "@/pages/Dashboard";
+import NotFound from "@/pages/NotFound";
+import Pokedex from "@/pages/Pokedex";
+import Layout from "@/components/Layout";
 
 interface PrivateRouteProps {
   children: React.ReactNode;

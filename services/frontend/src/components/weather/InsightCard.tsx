@@ -1,5 +1,5 @@
 import { AlertCircle, AlertTriangle, Info } from "lucide-react";
-import { Card } from "./ui/card";
+import { Card } from "@/components/ui/card";
 
 interface InsightCardProps {
   text: string;
