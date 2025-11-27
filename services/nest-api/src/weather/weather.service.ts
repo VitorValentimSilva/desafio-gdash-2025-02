@@ -229,4 +229,14 @@ export class WeatherService {
       summary,
     };
   }
+
+  async last24() {
+    const rows = await this.weatherModel
+      .find()
+      .sort({ collected_at: -1 })
+      .limit(24)
+      .lean();
+
+    return rows.reverse();
+  }
 }

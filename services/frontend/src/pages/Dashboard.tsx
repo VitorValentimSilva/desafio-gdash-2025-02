@@ -5,38 +5,7 @@ import WeatherHeroCard from "@/components/weather/WeatherHeroCard";
 import TemperatureChart from "@/components/weather/TemperatureChart";
 import PrecipitationChart from "@/components/weather/PrecipitationChart";
 import InsightsPanel from "@/components/insights/InsightsPanel";
-
-const temperatureData = [
-  { hour: "00:00", temp: 22 },
-  { hour: "01:00", temp: 21 },
-  { hour: "02:00", temp: 21 },
-  { hour: "03:00", temp: 20 },
-  { hour: "04:00", temp: 20 },
-  { hour: "05:00", temp: 21 },
-  { hour: "06:00", temp: 22 },
-  { hour: "07:00", temp: 23 },
-  { hour: "08:00", temp: 24 },
-  { hour: "09:00", temp: 25 },
-  { hour: "10:00", temp: 26 },
-  { hour: "11:00", temp: 27 },
-  { hour: "12:00", temp: 28 },
-  { hour: "13:00", temp: 28 },
-  { hour: "14:00", temp: 27 },
-  { hour: "15:00", temp: 26 },
-  { hour: "16:00", temp: 25 },
-  { hour: "17:00", temp: 24 },
-  { hour: "18:00", temp: 24 },
-  { hour: "19:00", temp: 23 },
-  { hour: "20:00", temp: 23 },
-  { hour: "21:00", temp: 22 },
-  { hour: "22:00", temp: 22 },
-  { hour: "23:00", temp: 22 },
-];
-
-const precipitationData = [
-  60, 55, 50, 48, 45, 50, 58, 65, 70, 75, 80, 85, 80, 78, 70, 60, 55, 50, 45,
-  40, 35, 30, 25, 20,
-];
+import { useLast24 } from "@/hooks/useLast24";
 
 const tableData = [
   {
@@ -85,8 +54,23 @@ const tableData = [
 
 export default function Dashboard() {
   const { logs } = useWeatherLogs();
+  const { logsLast24, loading } = useLast24();
 
   const latest = logs[0];
+
+  const temperatureData = logsLast24.map((l) => ({
+    hour: new Date(l.collected_at).toLocaleTimeString("pt-BR", {
+      hour: "2-digit",
+      minute: "2-digit",
+    }),
+    temp: l.current?.temperature_c ?? 0,
+  }));
+
+  const precipitationData: number[] = logsLast24.map((l) =>
+    l.current && typeof l.current.precipitation_mm === "number"
+      ? l.current.precipitation_mm
+      : 0
+  );
 
   return (
     <>
@@ -102,16 +86,22 @@ export default function Dashboard() {
               pressure={`${latest.current.pressure_msl_hpa ?? "—"} hPa`}
             />
           ) : (
-            <p className="text-white">Carregando clima...</p>
+            <p>Carregando clima...</p>
           )}
         </div>
 
         <InsightsPanel />
       </div>
 
-      <div className="grid lg:grid-cols-2 gap-6 mb-6">
-        <TemperatureChart data={temperatureData} />
-        <PrecipitationChart data={precipitationData} />
+      <div>
+        {loading ? (
+          <p>Carregando gráficos...</p>
+        ) : (
+          <div className="grid lg:grid-cols-2 gap-6 mb-6">
+            <TemperatureChart data={temperatureData} />
+            <PrecipitationChart data={precipitationData} />
+          </div>
+        )}
       </div>
 
       <WeatherTable data={tableData} />

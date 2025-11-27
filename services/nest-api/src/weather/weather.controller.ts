@@ -53,4 +53,10 @@ export class WeatherController {
   async getInsights(@Query('period') period = '24') {
     return this.svc.computeInsights(Number(period));
   }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('last-24')
+  async getLast24() {
+    return this.svc.last24();
+  }
 }
