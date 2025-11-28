@@ -89,6 +89,8 @@ services:
       - "5173:80"
     depends_on:
       - nest-api
+    networks:
+      - appnet
 
 volumes:
   mongo-data:

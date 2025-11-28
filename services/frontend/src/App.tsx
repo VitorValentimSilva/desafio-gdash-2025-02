@@ -33,11 +33,9 @@ export default function App() {
         <Route
           path="/pokedex"
           element={
-            <>
-              <Layout>
-                <Pokedex />
-              </Layout>
-            </>
+            <Layout>
+              <Pokedex />
+            </Layout>
           }
         />
         <Route path="*" element={<NotFound />} />
