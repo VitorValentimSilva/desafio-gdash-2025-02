@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from "react";
-import api from "@/lib/api";
 import type { WeatherLog } from "@/types/weather";
+import api from "@/lib/api";
 
 export function useWeatherLogs(limit = 50) {
   const [logs, setLogs] = useState<WeatherLog[]>([]);

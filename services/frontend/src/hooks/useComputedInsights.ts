@@ -1,12 +1,12 @@
 import { useMemo } from "react";
-import { weatherCodeToText } from "@/lib/weather";
 import {
   average,
   simpleTrend,
   comfortScore,
   getSeriesFromLogs,
 } from "@/lib/stats";
-import { type WeatherLog } from "@/types/weather";
+import { weatherCodeToText } from "@/lib/weather";
+import type { WeatherLog } from "@/types/weather";
 
 export function useComputedInsights(logs: WeatherLog[]) {
   const summary = useMemo(() => {
