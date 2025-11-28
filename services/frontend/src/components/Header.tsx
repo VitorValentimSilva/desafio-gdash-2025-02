@@ -21,7 +21,7 @@ export default function Header({ title, navItems }: HeaderProps) {
     <header className="border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-50">
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
+          <Link to={navItems[0]?.path} className="flex gap-3 items-center">
             <MobileNav
               title={title}
               description="Mantenha-se informado, mantenha-se preparado."
@@ -29,7 +29,7 @@ export default function Header({ title, navItems }: HeaderProps) {
             />
             <CloudRain className="w-6 h-6 text-primary" />
             <span className="text-xl font-bold text-gradient">{title}</span>
-          </div>
+          </Link>
 
           <nav className="hidden md:flex items-center gap-6">
             {navItems?.map((item) => (
