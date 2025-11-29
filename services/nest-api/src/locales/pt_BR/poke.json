@@ -1,0 +1,12 @@
+{
+  "FailedToFetch": "Falha ao buscar o lote {i} (offset={bOffset}): {error}",
+  "IdOrNameRequired": "É necessário fornecer id ou nome para buscar detalhes do pokémon",
+  "FetchingDetail": "Buscando detalhes para {nameOrId}",
+  "UnexpectedPokemonDetail": "Formato inesperado de detalhes do pokémon para {nameOrId}",
+  "InvalidResponse": "Resposta inválida do serviço externo",
+  "DetailFetchFailed": "Falha ao buscar detalhes para {nameOrId}: {error}",
+  "FailedToFetchPokemon": "Falha ao buscar detalhes do pokémon do serviço externo",
+  "FailedToFetchSearching": "Falha ao buscar o lote {i} durante a busca (offset={bOffset}): {error}",
+  "FailedToFetchType": "Falha ao buscar o tipo de pokémon {typeName}: {error}",
+  "QueryParamTypeIsRequired": "O parâmetro de consulta \"types\" é obrigatório (ex: types=grass,poison)"
+}

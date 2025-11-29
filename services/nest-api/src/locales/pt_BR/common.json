@@ -1,0 +1,13 @@
+{
+  "DefaultAdminEnsured:": "Usuário administrador padrão garantido {email}",
+  "DefaultAdminCreationFailed:": "Falha na criação do administrador padrão {error}",
+  "SwaggerTitle": "Desafio de Dados Climáticos",
+  "SwaggerDescription": "Documentação da API",
+  "SwaggerVersion": "1.0",
+  "SwaggerTagPoke": "Poke",
+  "NestListening": "Aplicação Nest está ouvindo na porta {port}",
+  "HttpFailure": "Falha na requisição HTTP para {url}: {statusText}",
+  "ExternalServiceError": "Erro no serviço externo",
+  "AxiosError": "AxiosError código={code}, status={status}, dados={data}",
+  "UnknownError": "Erro desconhecido não serializável"
+}

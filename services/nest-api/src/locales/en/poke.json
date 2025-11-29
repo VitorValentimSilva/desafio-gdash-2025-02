@@ -1,0 +1,12 @@
+{
+  "FailedToFetch": "Failed to fetch batch {i} (offset={bOffset}): {error}",
+  "IdOrNameRequired": "Either id or name must be provided to fetch pokemon details",
+  "FetchingDetail": "Fetching detail for {nameOrId}",
+  "UnexpectedPokemonDetail": "Unexpected pokemon detail shape for {nameOrId}",
+  "InvalidResponse": "Invalid response from external service",
+  "DetailFetchFailed": "Detail fetch failed for {nameOrId}: {error}",
+  "FailedToFetchPokemon": "Failed to fetch pokemon detail from external service",
+  "FailedToFetchSearching": "Failed to fetch batch {i} while searching (offset={bOffset}): {error}",
+  "FailedToFetchType": "Failed to fetch pokemon type {typeName}: {error}",
+  "QueryParamTypeIsRequired": "Query param \"types\" is required (ex: types=grass,poison)"
+}

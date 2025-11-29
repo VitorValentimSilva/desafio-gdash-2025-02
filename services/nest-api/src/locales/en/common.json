@@ -1,0 +1,13 @@
+{
+  "DefaultAdminEnsured:": "Default admin user ensured {email}",
+  "DefaultAdminCreationFailed:": "Default admin creation failed {error}",
+  "SwaggerTitle": "Climatic Data Challenge",
+  "SwaggerDescription": "API documentation",
+  "SwaggerVersion": "1.0",
+  "SwaggerTagPoke": "Poke",
+  "NestListening": "Nest application is listening on port {port}",
+  "HttpFailure": "HTTP fetch failed for {url}: {statusText}",
+  "ExternalServiceError": "External service error",
+  "AxiosError": "AxiosError code={code}, status={status}, data={data}",
+  "UnknownError": "Unknown non-serializable error"
+}
