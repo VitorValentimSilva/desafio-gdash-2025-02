@@ -35,7 +35,7 @@ export default function WeatherTable({
       <div className="flex items-center justify-between mb-6">
         <h3 className="text-xl font-semibold">Registros Históricos</h3>
 
-        <div className="flex gap-2">
+        <div className="flex gap-2 flex-wrap sm:flex-row flex-col">
           <Button
             variant="outline"
             size="sm"
