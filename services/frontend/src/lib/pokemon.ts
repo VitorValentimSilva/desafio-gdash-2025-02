@@ -43,3 +43,27 @@ export function getTypeBadgeClass(type: string): string {
     "bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-200"
   );
 }
+
+export function getTypeClass(type: string) {
+  const map: Record<string, string> = {
+    grass: "text-green-700",
+    poison: "text-purple-700",
+    fire: "text-rose-700",
+    water: "text-sky-700",
+    electric: "text-yellow-700",
+    fairy: "text-pink-700",
+    normal: "text-slate-700",
+    psychic: "text-indigo-700",
+    ghost: "text-violet-700",
+    dragon: "text-orange-700",
+    flying: "text-sky-600",
+    ground: "text-amber-700",
+    rock: "text-stone-700",
+    ice: "text-cyan-700",
+    bug: "text-lime-700",
+    steel: "text-slate-600",
+    dark: "text-slate-900",
+    fighting: "text-red-700",
+  };
+  return map[type] ?? "text-muted-foreground";
+}

@@ -1,74 +1,81 @@
-import { useState } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
-import { usePokedex } from "@/hooks/usePokedex";
-import type { PokemonUi } from "@/types/pokemon";
-import { Button } from "@/components/ui/button";
-import PokemonCard from "@/components/pokedex/PokemonCard";
+import PokedexFilters from "@/components/pokedex/PokedexFilters";
+import PokedexList from "@/components/pokedex/PokedexList";
+import PokedexPagination from "@/components/pokedex/PokedexPagination";
 import PokemonDetailModal from "@/components/pokedex/PokemonDetailModal";
+import { usePokedexList } from "@/hooks/usePokedexList";
+import { usePokemonDetail } from "@/hooks/usePokemonDetail";
 
 export default function PokedexPage() {
-  const { page, totalPages, items, loading, fetchPage, fetchDetail } =
-    usePokedex(12);
+  const {
+    pokemonList,
+    loading,
+    error,
+    page,
+    totalPages,
+    setQuery,
+    setOrder,
+    setTypes,
+    fetchPage,
+  } = usePokedexList(12);
 
-  const [selected, setSelected] = useState<PokemonUi | null>(null);
-
-  async function openDetail(p: { id: number; name: string }) {
-    const det = await fetchDetail(p.id ?? p.name);
-    setSelected(det);
-  }
+  const {
+    selected,
+    loading: detailLoading,
+    error: detailError,
+    openDetail,
+    closeDetail,
+  } = usePokemonDetail();
 
   return (
     <>
       <div className="mb-6">
-        <h1 className="text-3xl font-bold">Explorar Pokémons</h1>
+        <h1 className="text-3xl font-bold">Pokédex</h1>
         <p className="text-muted-foreground">
-          Buscando dados da PokeAPI via backend
+          Explore a vasta coleção de Pokémons e descubra suas características
+          únicas.
         </p>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
-        {loading ? (
-          <div className="col-span-full text-center py-12">Carregando...</div>
-        ) : (
-          items.map((p) => (
-            <PokemonCard
-              key={p.id || p.name}
-              pokemon={p}
-              onClick={() => openDetail(p)}
-            />
-          ))
-        )}
-      </div>
+      {error && <div className="mb-4 text-red-500">{error}</div>}
 
-      <div className="flex items-center justify-center gap-3">
-        <Button
-          variant="outline"
-          size="icon"
-          onClick={() => fetchPage(Math.max(1, page - 1))}
-          disabled={page === 1}
-        >
-          <ChevronLeft className="w-4 h-4" />
-        </Button>
+      <PokedexFilters
+        value={{ q: "", order: "pokedex", types: [] }}
+        onChange={(s) => {
+          setQuery(s.q);
+          setOrder(s.order);
+          setTypes(s.types);
+        }}
+      />
 
-        <div className="px-3 py-2 rounded-md bg-surface/6">
-          Página {page} de {totalPages}
-        </div>
+      <PokedexList
+        items={pokemonList}
+        loading={loading}
+        onItemClick={openDetail}
+      />
 
-        <Button
-          variant="outline"
-          size="icon"
-          onClick={() => fetchPage(Math.min(totalPages, page + 1))}
-          disabled={page === totalPages}
-        >
-          <ChevronRight className="w-4 h-4" />
-        </Button>
-      </div>
+      <PokedexPagination
+        page={page}
+        totalPages={totalPages}
+        onChange={(p) => fetchPage(p)}
+      />
 
       <PokemonDetailModal
         open={!!selected}
-        onClose={() => setSelected(null)}
+        onClose={closeDetail}
         data={selected}
       />
+
+      {detailLoading && (
+        <div className="fixed bottom-6 right-6 bg-background/90 p-3 rounded shadow">
+          Carregando detalhes...
+        </div>
+      )}
+
+      {detailError && (
+        <div className="fixed bottom-6 left-6 bg-red-50 text-red-900 p-3 rounded shadow">
+          {detailError}
+        </div>
+      )}
     </>
   );
 }

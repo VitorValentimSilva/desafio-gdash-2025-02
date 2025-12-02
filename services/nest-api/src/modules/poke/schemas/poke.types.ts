@@ -4,6 +4,8 @@ export type PokemonListItem = {
   name: string;
   url: string;
   id?: number;
+  types?: string[];
+  image?: string;
 };
 
 export type PagedResult = {

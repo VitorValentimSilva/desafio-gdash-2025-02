@@ -1,15 +1,28 @@
 import { getTypeBadgeClass, formatPokedexNumber } from "@/lib/pokemon";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import type { PokemonUi } from "@/types/pokemon";
+import type { PokemonListItem } from "@/types/pokemon";
 
-export default function PokemonCard({
-  pokemon,
-  onClick,
-}: {
-  pokemon: PokemonUi;
+interface PokemonCardProps {
+  pokemon: PokemonListItem;
   onClick?: () => void;
-}) {
+}
+
+function hasStringTypes(
+  x: PokemonListItem
+): x is PokemonListItem & { types?: string[] } {
+  return (
+    Array.isArray((x as unknown as { types?: unknown }).types) &&
+    ((x as unknown as { types?: unknown[] }).types?.every(
+      (i: unknown) => typeof i === "string"
+    ) ??
+      false)
+  );
+}
+
+export default function PokemonCard({ pokemon, onClick }: PokemonCardProps) {
+  const types = hasStringTypes(pokemon) ? pokemon.types ?? [] : [];
+
   return (
     <Card
       className="p-4 hover-lift cursor-pointer flex flex-col items-center text-center transition-shadow"
@@ -35,16 +48,22 @@ export default function PokemonCard({
       </div>
 
       <div className="flex gap-2 mt-3 flex-wrap justify-center">
-        {(pokemon.types ?? []).map((t) => (
-          <Badge
-            key={t}
-            className={`text-xs px-2 py-0.5 rounded-md font-medium ${getTypeBadgeClass(
-              t
-            )}`}
-          >
-            {t}
+        {types.length === 0 ? (
+          <Badge className="text-xs px-2 py-0.5 rounded-md font-medium">
+            —
           </Badge>
-        ))}
+        ) : (
+          types.map((t) => (
+            <Badge
+              key={t}
+              className={`text-xs px-2 py-0.5 rounded-md font-medium ${getTypeBadgeClass(
+                t
+              )}`}
+            >
+              {t}
+            </Badge>
+          ))
+        )}
       </div>
     </Card>
   );

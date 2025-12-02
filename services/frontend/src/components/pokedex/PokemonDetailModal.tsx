@@ -1,17 +1,19 @@
-import { getTypeBadgeClass, formatPokedexNumber } from "@/lib/pokemon";
+import { formatPokedexNumber, getTypeBadgeClass } from "@/lib/pokemon";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import type { PokemonUi } from "@/types/pokemon";
+import type { PokemonDetail } from "@/types/pokemon";
+
+interface PokemonDetailModalProps {
+  open: boolean;
+  onClose: () => void;
+  data: PokemonDetail | null;
+}
 
 export default function PokemonDetailModal({
   open,
   onClose,
   data,
-}: {
-  open: boolean;
-  onClose: () => void;
-  data: PokemonUi | null;
-}) {
+}: PokemonDetailModalProps) {
   if (!open || !data) return null;
 
   return (
@@ -23,8 +25,8 @@ export default function PokemonDetailModal({
         className="max-w-lg w-full p-6"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex gap-4">
-          <div className="w-32 h-32 flex items-center justify-center">
+        <div className="flex flex-col md:flex-row gap-4">
+          <div className="w-full md:w-32 h-32 flex items-center justify-center">
             {data.image ? (
               <img
                 src={data.image}
@@ -44,18 +46,42 @@ export default function PokemonDetailModal({
               <h3 className="text-xl font-bold capitalize">{data.name}</h3>
             </div>
 
-            <div className="flex gap-2 mt-2">
-              {(data.types ?? []).map((t: string) => (
+            <div className="flex gap-2 mt-2 flex-wrap">
+              {(data.types ?? []).map((t) => (
                 <span
-                  key={t}
+                  key={t.name}
                   className={`text-sm px-2 py-0.5 rounded-md font-medium ${getTypeBadgeClass(
-                    t
+                    t.name
                   )}`}
                 >
-                  {t}
+                  {t.name}
                 </span>
               ))}
             </div>
+
+            {data.description && (
+              <p className="text-sm text-muted-foreground mt-3">
+                {data.description}
+              </p>
+            )}
+
+            {data.weaknesses && data.weaknesses.length > 0 && (
+              <div className="mt-3">
+                <div className="text-sm text-muted-foreground">Fraquezas</div>
+                <div className="flex gap-2 flex-wrap mt-2">
+                  {data.weaknesses.map((w) => (
+                    <span
+                      key={w}
+                      className={`text-xs px-2 py-0.5 rounded ${getTypeBadgeClass(
+                        w
+                      )}`}
+                    >
+                      {w}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
 
             {data.baseStats && (
               <div className="mt-4">
