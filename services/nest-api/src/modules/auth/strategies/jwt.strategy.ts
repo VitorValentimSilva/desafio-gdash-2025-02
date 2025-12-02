@@ -4,6 +4,12 @@ import { ExtractJwt, Strategy as JwtStrategyBase } from 'passport-jwt';
 import * as dotenv from 'dotenv';
 dotenv.config();
 
+export type JwtPayload = {
+  sub: string;
+  email: string;
+  role: string;
+};
+
 @Injectable()
 export class JwtStrategy extends PassportStrategy(JwtStrategyBase, 'jwt') {
   constructor() {
@@ -13,7 +19,7 @@ export class JwtStrategy extends PassportStrategy(JwtStrategyBase, 'jwt') {
     });
   }
 
-  validate(payload: { sub: string; email: string; role: string }) {
+  validate(payload: JwtPayload) {
     return { userId: payload.sub, email: payload.email, role: payload.role };
   }
 }

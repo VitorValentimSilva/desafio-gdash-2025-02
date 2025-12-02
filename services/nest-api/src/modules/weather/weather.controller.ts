@@ -10,7 +10,7 @@ import {
 import { WeatherService } from './weather.service';
 import { CreateWeatherDto } from './dto/create-weather.dto';
 import type { Response } from 'express';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 
 @Controller('weather')
 export class WeatherController {

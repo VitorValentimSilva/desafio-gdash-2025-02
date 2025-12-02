@@ -46,10 +46,17 @@ async function bootstrap() {
     .setDescription(i18n.t('common.SwaggerDescription'))
     .setVersion(i18n.t('common.SwaggerVersion'))
     .addTag(i18n.t('common.SwaggerTagPoke'))
+    .addTag(i18n.t('common.SwaggerTagUsers'))
+    .addTag(i18n.t('common.SwaggerTagAuth'))
+    .addBearerAuth()
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api/docs', app, document);
+  SwaggerModule.setup('api/docs', app, document, {
+    swaggerOptions: {
+      persistAuthorization: true,
+    },
+  });
 
   const port = process.env.PORT ? parseInt(process.env.PORT) : 3000;
   await createDefaultAdmin(app);
