@@ -13,6 +13,8 @@ import { I18nService } from 'nestjs-i18n';
 export interface PlainUser extends Omit<User, 'password'> {
   password: string;
   _id: { toString(): string };
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 export interface PublicUser {
@@ -50,6 +52,10 @@ export class UsersService {
     email: string;
     password: string;
     role?: string;
+    name?: string;
+    bio?: string;
+    location?: string;
+    photo?: string;
   }): Promise<PlainUser> {
     this.logger.log(
       this.i18n.t('user.CreatingUser', {
@@ -73,6 +79,10 @@ export class UsersService {
         email: dto.email,
         password: hashed,
         role: dto.role ?? 'user',
+        name: dto.name,
+        bio: dto.bio,
+        location: dto.location,
+        photo: dto.photo,
       });
 
       const id =
@@ -311,6 +321,12 @@ export class UsersService {
       if (updateDto.password)
         payload.password = await bcrypt.hash(String(updateDto.password), 10);
 
+      if (typeof updateDto.name === 'string') payload.name = updateDto.name;
+      if (typeof updateDto.bio === 'string') payload.bio = updateDto.bio;
+      if (typeof updateDto.location === 'string')
+        payload.location = updateDto.location;
+      if (typeof updateDto.photo === 'string') payload.photo = updateDto.photo;
+
       const updated = (await this.usersRepo.findByIdAndUpdate(
         id,
         payload,
@@ -363,5 +379,36 @@ export class UsersService {
         this.i18n.t('user.RemoveFailed', { args: { id } }),
       );
     }
+  }
+
+  async exportUser(id: string): Promise<Record<string, any>> {
+    this.logger.log(this.i18n.t('user.ExportingUser', { args: { id } }));
+    const u = await this.findById(id);
+    if (!u) {
+      this.logger.warn(this.i18n.t('user.FindByIdNotFound', { args: { id } }));
+      throw new NotFoundException(this.i18n.t('user.FindByIdNotFound'));
+    }
+
+    const userWithOptionalFields = u as PlainUser & {
+      name?: string;
+      bio?: string;
+      location?: string;
+      photo?: string;
+    };
+
+    const exportData = {
+      id: u._id.toString(),
+      email: u.email,
+      role: u.role,
+      active: u.active,
+      name: userWithOptionalFields.name ?? null,
+      bio: userWithOptionalFields.bio ?? null,
+      location: userWithOptionalFields.location ?? null,
+      photo: userWithOptionalFields.photo ?? null,
+      createdAt: u.createdAt,
+      updatedAt: u.updatedAt,
+    };
+
+    return exportData;
   }
 }

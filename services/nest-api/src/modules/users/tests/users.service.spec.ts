@@ -85,6 +85,51 @@ describe('UsersService', () => {
         email: 'a@b.com',
         password: hashed,
         role: 'user',
+        name: undefined,
+        bio: undefined,
+        location: undefined,
+        photo: undefined,
+      });
+      expect(res).toEqual(fakeCreated);
+    });
+
+    it('should create user with optional profile fields', async () => {
+      (repo.findOne as jest.Mock).mockResolvedValue(null);
+      const hashed = 'hashedPwd2';
+      jest.spyOn(bcrypt, 'hash').mockResolvedValue(hashed as never);
+
+      const createDto = {
+        email: 'b@c.com',
+        password: 'secret2',
+        role: 'user',
+        name: 'Vitor',
+        bio: 'dev',
+        location: 'SP',
+        photo: 'https://img.foo/1.png',
+      };
+
+      const fakeCreated = {
+        _id: { toString: () => 'id10' },
+        email: createDto.email,
+        password: hashed,
+        role: createDto.role,
+        name: createDto.name,
+        bio: createDto.bio,
+        location: createDto.location,
+        photo: createDto.photo,
+      };
+      (repo.create as jest.Mock).mockResolvedValue(fakeCreated);
+
+      const res = await service.create(createDto);
+      expect(bcrypt.hash).toHaveBeenCalledWith('secret2', 10);
+      expect(repo.create).toHaveBeenCalledWith({
+        email: createDto.email,
+        password: hashed,
+        role: createDto.role,
+        name: createDto.name,
+        bio: createDto.bio,
+        location: createDto.location,
+        photo: createDto.photo,
       });
       expect(res).toEqual(fakeCreated);
     });
@@ -103,6 +148,7 @@ describe('UsersService', () => {
         _id: { toString: () => 'id1' },
         email: 'u@e.com',
         password: 'p',
+        name: 'N',
       };
       (repo.findOne as jest.Mock).mockResolvedValue(user);
       const res = await service.findByEmail('u@e.com');
@@ -156,11 +202,36 @@ describe('UsersService', () => {
       expect(repo.findByIdAndUpdate).toHaveBeenCalled();
     });
 
-    it('returns updated user when found', async () => {
+    it('hashes password when provided and returns updated user', async () => {
+      const hashed = 'newHash';
+      jest.spyOn(bcrypt, 'hash').mockResolvedValue(hashed as never);
+
+      const updated = {
+        _id: { toString: () => 'id2' },
+        email: 'x@y.com',
+        password: hashed,
+        name: 'New Name',
+      };
+      (repo.findByIdAndUpdate as jest.Mock).mockResolvedValue(updated);
+
+      const res = await service.update('id2', {
+        password: 'plainNew',
+        name: 'New Name',
+      });
+      expect(bcrypt.hash).toHaveBeenCalledWith('plainNew', 10);
+      expect(repo.findByIdAndUpdate).toHaveBeenCalledWith('id2', {
+        password: hashed,
+        name: 'New Name',
+      });
+      expect(res).toEqual(updated);
+    });
+
+    it('returns updated user when found (no password case)', async () => {
       const updated = {
         _id: { toString: () => 'id2' },
         email: 'x@y.com',
         password: 'p',
+        name: 'Name',
       };
       (repo.findByIdAndUpdate as jest.Mock).mockResolvedValue(updated);
 
@@ -187,6 +258,49 @@ describe('UsersService', () => {
 
       const res = await service.remove('id3');
       expect(res).toEqual(deleted);
+    });
+  });
+
+  describe('exportUser', () => {
+    it('throws NotFoundException when user not found', async () => {
+      (repo.findById as jest.Mock).mockResolvedValue(null);
+
+      await expect(service.exportUser('noexist')).rejects.toThrow(
+        NotFoundException,
+      );
+      expect(repo.findById).toHaveBeenCalledWith('noexist');
+    });
+
+    it('returns export object without password when user exists', async () => {
+      const now = new Date();
+      const user = {
+        _id: { toString: () => 'idExport' },
+        email: 'export@e.com',
+        password: 'secret',
+        role: 'user',
+        active: true,
+        name: 'Exported',
+        bio: 'bio here',
+        location: 'Loc',
+        photo: 'https://img/export.png',
+        createdAt: now,
+        updatedAt: now,
+      };
+      (repo.findById as jest.Mock).mockResolvedValue(user);
+
+      const res = await service.exportUser('idExport');
+      expect(res).toEqual({
+        id: 'idExport',
+        email: 'export@e.com',
+        role: 'user',
+        active: true,
+        name: 'Exported',
+        bio: 'bio here',
+        location: 'Loc',
+        photo: 'https://img/export.png',
+        createdAt: now,
+        updatedAt: now,
+      });
     });
   });
 });

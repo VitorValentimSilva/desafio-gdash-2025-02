@@ -13,6 +13,18 @@ export class UserResponseDto {
   @ApiProperty({ example: true })
   active: boolean;
 
+  @ApiProperty({ example: 'Vitor Valentim' })
+  name?: string;
+
+  @ApiProperty({ example: 'Software developer' })
+  bio?: string;
+
+  @ApiProperty({ example: 'São Paulo, Brazil' })
+  location?: string;
+
+  @ApiProperty({ example: 'https://cdn.example.com/avatar.jpg' })
+  photo?: string;
+
   @ApiProperty({ type: String, example: new Date().toISOString() })
   createdAt: Date;
 

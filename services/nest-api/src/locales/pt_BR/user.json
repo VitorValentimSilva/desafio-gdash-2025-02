@@ -28,5 +28,6 @@
   "RemovingUser": "Removendo usuário com o id {{id}}",
   "RemoveNotFound": "Nenhum usuário encontrado para remover com o id {{id}}",
   "RemovedUser": "Usuário removido com o id {{id}} e email {{email}}",
-  "RemoveFailed": "Falha ao remover usuário com o id {{id}}"
+  "RemoveFailed": "Falha ao remover usuário com o id {{id}}",
+  "ExportingUser": "Exportando usuário com o id {{id}}"
 }

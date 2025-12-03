@@ -8,6 +8,8 @@ import {
   Delete,
   Query,
   UseGuards,
+  Req,
+  ForbiddenException,
 } from '@nestjs/common';
 import { UsersService, PlainUser, ListResult } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -27,13 +29,19 @@ import {
 } from '@nestjs/swagger';
 import { UserDocument } from './schemas/user.schema';
 import { User } from './schemas/user.schema';
+import type { Response, Request } from 'express';
+import { Res } from '@nestjs/common';
+import { I18nService } from 'nestjs-i18n';
 
 @ApiTags('Users')
 @ApiBearerAuth()
 @ApiExtraModels(PaginatedUserDto, UserResponseDto, UserListQueryDto)
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(
+    private readonly usersService: UsersService,
+    private readonly i18n: I18nService,
+  ) {}
 
   private mapToResponse(user: PlainUser | UserDocument): UserResponseDto {
     const id =
@@ -43,6 +51,10 @@ export class UsersController {
       email: (user as unknown as { email: string }).email,
       role: (user as unknown as { role: string }).role,
       active: (user as unknown as { active?: boolean }).active ?? true,
+      name: (user as unknown as { name?: string }).name,
+      bio: (user as unknown as { bio?: string }).bio,
+      location: (user as unknown as { location?: string }).location,
+      photo: (user as unknown as { photo?: string }).photo,
       createdAt:
         (user as unknown as { createdAt?: Date }).createdAt ?? new Date(),
       updatedAt:
@@ -107,5 +119,30 @@ export class UsersController {
   async create(@Body() dto: CreateUserDto): Promise<UserResponseDto> {
     const created: PlainUser = await this.usersService.create(dto);
     return this.mapToResponse(created);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get(':id/export')
+  @ApiOperation({ summary: 'Export user data (JSON)' })
+  @ApiResponse({ status: 200, description: 'JSON file attachment' })
+  async export(
+    @Param('id') id: string,
+    @Req() req: Request,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const requester = (req.user as { id?: string; role?: string }) ?? {};
+    if (requester.role !== 'admin' && requester.id !== id) {
+      throw new ForbiddenException(
+        this.i18n.t('user.ExportingUser', { args: { id } }),
+      );
+    }
+
+    const exportData = await this.usersService.exportUser(id);
+
+    const filename = `user-${id}-export.json`;
+    res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+    res.setHeader('Content-Type', 'application/json; charset=utf-8');
+
+    return exportData;
   }
 }

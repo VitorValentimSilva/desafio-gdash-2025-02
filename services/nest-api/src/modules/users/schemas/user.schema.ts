@@ -16,6 +16,18 @@ export class User {
 
   @Prop({ default: true })
   active: boolean;
+
+  @Prop()
+  name?: string;
+
+  @Prop()
+  bio?: string;
+
+  @Prop()
+  location?: string;
+
+  @Prop()
+  photo?: string;
 }
 
 export const UserSchema: MongooseSchema<User> =

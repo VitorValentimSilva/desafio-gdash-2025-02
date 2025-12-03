@@ -28,5 +28,6 @@
   "RemovingUser": "Removing user with id {{id}}",
   "RemoveNotFound": "No user found to remove with id {{id}}",
   "RemovedUser": "Removed user with id {{id}} and email {{email}}",
-  "RemoveFailed": "Failed to remove user with id {{id}}"
+  "RemoveFailed": "Failed to remove user with id {{id}}",
+  "ExportingUser": "Exporting user with id {{id}}"
 }
