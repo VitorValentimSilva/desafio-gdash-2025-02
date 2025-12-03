@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from "react";
 import type { Insight } from "@/types/insight";
-import api from "@/lib/api";
+import api from "@/services/api";
 
 export function useInsights(period = 24) {
   const [insight, setInsight] = useState<Insight>();

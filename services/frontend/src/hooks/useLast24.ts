@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import type { WeatherLog } from "@/types/weather";
-import api from "@/lib/api";
+import api from "@/services/api";
 
 export function useLast24() {
   const [logsLast24, setLogsLast24] = useState<WeatherLog[]>([]);

@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { CloudRain } from "lucide-react";
-import { getToken } from "@/lib/auth";
+import { getToken } from "@/lib/tokenStorage";
 import { ModeToggle } from "@/components/ui/mode-toggle";
 import MobileNav from "@/components/MobileNav";
 import ProfileModal from "@/components/ProfileModal";

@@ -100,7 +100,6 @@ export class UsersController {
     return this.mapToResponse(u);
   }
 
-  @UseGuards(JwtAuthGuard)
   @Post()
   @ApiOperation({ summary: 'Create user' })
   @ApiResponse({ status: 201, type: UserResponseDto })

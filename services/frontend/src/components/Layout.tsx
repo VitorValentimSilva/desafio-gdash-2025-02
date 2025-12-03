@@ -1,6 +1,6 @@
 import { Compass, Home } from "lucide-react";
-import { getToken } from "@/lib/auth";
 import Header from "@/components/Header";
+import { getToken } from "@/lib/tokenStorage";
 
 interface LayoutProps {
   children: React.ReactNode;

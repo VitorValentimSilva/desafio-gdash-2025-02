@@ -1,34 +1,50 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { CloudRain } from "lucide-react";
-import { login } from "@/lib/auth";
 import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
+import { useAuthApi } from "@/hooks/useAuthApi";
+import axios from "axios";
 
 export default function Login() {
+  const { login } = useAuthApi();
   const [email, setEmail] = useState("admin@example.com");
   const [password, setPassword] = useState("123456");
   const [error, setError] = useState<string | null>(null);
   const nav = useNavigate();
   const [isSignup, setIsSignup] = useState(false);
+
   const handle = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
 
     try {
-      await login(email, password);
+      await login({ email, password });
       nav("/");
     } catch (e: unknown) {
       if (e instanceof Error) {
         setError(e.message);
-      } else if (typeof e === "string") {
-        setError(e);
-      } else {
-        setError("Falha no Login! Tente novamente.");
+        return;
       }
+
+      if (axios.isAxiosError(e)) {
+        const respData = e.response?.data;
+        let msg = e.message;
+        if (respData) {
+          if (typeof respData.message === "string") msg = respData.message;
+          else if (Array.isArray(respData.message))
+            msg = respData.message.join(" ");
+          else if (respData.error) msg = respData.error;
+        }
+        setError(msg);
+        return;
+      }
+
+      if (typeof e === "string") setError(e);
+      else setError("Falha no Login! Tente novamente.");
     }
   };
 
