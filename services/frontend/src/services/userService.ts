@@ -33,4 +33,9 @@ export const userService = {
     const { data } = await api.delete<UserResponse>(`/users/${id}`);
     return data;
   },
+
+  async exportUser(id: string) {
+    const { data } = await api.get(`/users/${id}/export`);
+    return data;
+  },
 };

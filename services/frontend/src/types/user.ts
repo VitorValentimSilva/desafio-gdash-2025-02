@@ -5,6 +5,10 @@ export interface UserResponse {
   email: string;
   role: Role;
   active: boolean;
+  name?: string;
+  bio?: string;
+  location?: string;
+  photo?: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -13,6 +17,10 @@ export interface CreateUserDto {
   email: string;
   password: string;
   role?: Role;
+  name?: string;
+  bio?: string;
+  location?: string;
+  photo?: string;
 }
 
 export interface UpdateUserDto {

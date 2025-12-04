@@ -34,11 +34,16 @@ export function useUsersApi() {
     return userService.remove(id);
   }, []);
 
+  const exportUser = useCallback((id: string) => {
+    return userService.exportUser(id);
+  }, []);
+
   return {
     list,
     get,
     create,
     update,
     remove,
+    exportUser,
   } as const;
 }
