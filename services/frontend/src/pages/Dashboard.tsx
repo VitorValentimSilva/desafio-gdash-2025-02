@@ -7,16 +7,20 @@ import WeatherHeroCard from "@/components/weather/WeatherHeroCard";
 import TemperatureChart from "@/components/weather/TemperatureChart";
 import PrecipitationChart from "@/components/weather/PrecipitationChart";
 import InsightsPanel from "@/components/insights/InsightsPanel";
+import { useLanguage } from "@/hooks/useLanguage";
+import { useTranslation } from "react-i18next";
 
 export default function Dashboard() {
   const { logs } = useWeatherLogs();
   const { logsLast24, loading } = useLast24();
   const { data, exportCsv, exportXlsx } = useWeatherTable();
+  const { locale } = useLanguage();
+  const { t } = useTranslation("weather");
 
   const latest = logs[0];
 
   const temperatureData = logsLast24.map((l) => ({
-    hour: new Date(l.collected_at).toLocaleTimeString("pt-BR", {
+    hour: new Date(l.collected_at).toLocaleTimeString(locale, {
       hour: "2-digit",
       minute: "2-digit",
     }),
@@ -37,13 +41,13 @@ export default function Dashboard() {
             <WeatherHeroCard
               city={latest.location.city}
               temperature={`${latest.current.temperature_c}°C`}
-              condition={weatherCodeToText(latest.current.weathercode)}
+              condition={weatherCodeToText(latest.current.weathercode, t)}
               humidity={`${latest.current.relative_humidity_percent ?? "—"}%`}
               wind={`${latest.current.wind_speed_m_s ?? "—"} m/s`}
               pressure={`${latest.current.pressure_msl_hpa ?? "—"} hPa`}
             />
           ) : (
-            <p>Carregando clima...</p>
+            <p>{t("loadingWeather")}</p>
           )}
         </div>
 
@@ -52,7 +56,7 @@ export default function Dashboard() {
 
       <div>
         {loading ? (
-          <p>Carregando gráficos...</p>
+          <p>{t("loadingGraph")}</p>
         ) : (
           <div className="grid lg:grid-cols-2 gap-6 mb-6">
             <TemperatureChart data={temperatureData} />

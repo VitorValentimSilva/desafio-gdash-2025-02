@@ -12,8 +12,10 @@ import {
 import { formatTemp, formatHumidity } from "@/lib/weather";
 import type { WeatherLog } from "@/types/weather";
 import { Card } from "@/components/ui/card";
+import { useLanguage } from "@/hooks/useLanguage";
+import { useTranslation } from "react-i18next";
 
-function buildSeries(logs: WeatherLog[]) {
+function buildSeries(logs: WeatherLog[], locale: string) {
   const slice = (logs ?? []).slice(0, 200);
   const sorted = [...slice].sort(
     (a, b) =>
@@ -22,20 +24,23 @@ function buildSeries(logs: WeatherLog[]) {
 
   return sorted.map((l) => {
     const time = new Date(l.collected_at);
-    const label = time.toLocaleTimeString([], {
+    const label = time.toLocaleTimeString(locale, {
       hour: "2-digit",
       minute: "2-digit",
     });
+
     const temp =
       typeof l.current?.temperature_c === "number"
         ? l.current.temperature_c
         : typeof l.current?.temperature === "number"
         ? l.current.temperature
         : null;
+
     const humidity =
       typeof l.current?.relative_humidity_percent === "number"
         ? l.current.relative_humidity_percent
         : null;
+
     return {
       label,
       temp: temp === null ? null : Number(temp),
@@ -45,12 +50,17 @@ function buildSeries(logs: WeatherLog[]) {
 }
 
 export default function InsightsChart({ logs }: { logs: WeatherLog[] }) {
-  const series = useMemo(() => buildSeries(logs), [logs]);
+  const { locale } = useLanguage();
+  const { t } = useTranslation("weather");
+
+  const series = useMemo(() => buildSeries(logs, locale), [logs, locale]);
   const xInterval = Math.max(0, Math.floor(series.length / 8));
 
   return (
     <Card className="p-6 hover-lift animate-fade-in">
-      <h3 className="text-lg font-semibold mb-4">Histórico (temp & umidade)</h3>
+      <h3 className="text-lg font-semibold mb-4">
+        {t("historicalTempHumidity")}
+      </h3>
 
       <ResponsiveContainer width="100%" height={280}>
         <LineChart data={series}>
@@ -79,13 +89,13 @@ export default function InsightsChart({ logs }: { logs: WeatherLog[] }) {
 
           <Tooltip
             formatter={(value: number | string, name: string) => {
-              if (name.includes("Temp"))
+              if (name.includes(t("temperature")))
                 return [formatTemp(Number(value)), name];
-              if (name.includes("Umidade"))
+              if (name.includes(t("humidity")))
                 return [formatHumidity(Number(value)), name];
               return [value, name];
             }}
-            labelFormatter={(label) => `Horário: ${label}`}
+            labelFormatter={(label) => `${t("time")}: ${label}`}
           />
 
           <Legend verticalAlign="bottom" height={36} />
@@ -94,7 +104,7 @@ export default function InsightsChart({ logs }: { logs: WeatherLog[] }) {
             yAxisId="left"
             type="monotone"
             dataKey="temp"
-            name="Temperatura (°C)"
+            name={`${t("temperature")} (°C)`}
             stroke="#FF7A18"
             dot={false}
             strokeWidth={2}
@@ -107,7 +117,7 @@ export default function InsightsChart({ logs }: { logs: WeatherLog[] }) {
             yAxisId="right"
             type="monotone"
             dataKey="humidity"
-            name="Umidade (%)"
+            name={`${t("humidity")} (%)`}
             stroke="#2EB3FF"
             dot={false}
             strokeWidth={2}

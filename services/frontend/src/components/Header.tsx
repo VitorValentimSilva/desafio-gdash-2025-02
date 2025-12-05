@@ -4,6 +4,8 @@ import { getToken } from "@/lib/tokenStorage";
 import { ModeToggle } from "@/components/ui/mode-toggle";
 import MobileNav from "@/components/MobileNav";
 import ProfileModal from "@/components/ProfileModal";
+import LanguageSwitcher from "@/components/LanguageSwitcher";
+import { useTranslation } from "react-i18next";
 
 interface HeaderProps {
   title: string;
@@ -15,6 +17,8 @@ interface HeaderProps {
 }
 
 export default function Header({ title, navItems }: HeaderProps) {
+  const { t } = useTranslation("user");
+
   const token = getToken();
 
   return (
@@ -28,7 +32,9 @@ export default function Header({ title, navItems }: HeaderProps) {
               navItems={navItems}
             />
             <CloudRain className="w-6 h-6 text-primary" />
-            <span className="text-xl font-bold text-gradient">{title}</span>
+            <span className="hidden md:block text-xl font-bold text-gradient">
+              {title}
+            </span>
           </Link>
 
           <nav className="hidden md:flex items-center gap-6">
@@ -51,13 +57,15 @@ export default function Header({ title, navItems }: HeaderProps) {
           <div className="flex items-center gap-2">
             <ModeToggle />
 
+            <LanguageSwitcher />
+
             {token && (
               <ProfileModal
-                title="Perfil de usuário"
-                description="Gerencie as informações e preferências do seu perfil."
+                title={t("userProfileTitle")}
+                description={t("userProfileDescription")}
                 tabsTriggers={[
-                  { title: "Perfil", value: "profile" },
-                  { title: "Configurações", value: "settings" },
+                  { title: t("menu.profile"), value: "profile" },
+                  { title: t("menu.settings"), value: "settings" },
                 ]}
               />
             )}

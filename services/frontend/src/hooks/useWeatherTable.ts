@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { WeatherApi } from "@/services/weatherApi";
-import { mapWeatherRecord } from "@/mappers/mapWeatherRecord";
+import { mapWeatherRecord } from "@/lib/weather";
 
 export function useWeatherTable() {
   const [data, setData] = useState([]);

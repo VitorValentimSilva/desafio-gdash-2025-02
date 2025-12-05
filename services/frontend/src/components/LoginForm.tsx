@@ -1,17 +1,16 @@
 import { useForm, type FieldPath, type SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema, type LoginPayload } from "@/schemas/user.schema";
-import type z from "zod";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useAuthApi } from "@/hooks/useAuthApi";
 import { useNavigate } from "react-router-dom";
-
-type LoginValues = z.infer<typeof loginSchema>;
+import { useTranslation } from "react-i18next";
 
 export default function LoginForm() {
   const { login } = useAuthApi();
+  const { t } = useTranslation("auth");
   const nav = useNavigate();
 
   const {
@@ -19,12 +18,12 @@ export default function LoginForm() {
     handleSubmit,
     formState: { errors, isSubmitting },
     setError,
-  } = useForm<LoginValues>({
-    resolver: zodResolver(loginSchema),
+  } = useForm<LoginPayload>({
+    resolver: zodResolver(loginSchema(t)),
     defaultValues: { email: "", password: "" },
   });
 
-  const onSubmit: SubmitHandler<LoginValues> = async (data) => {
+  const onSubmit: SubmitHandler<LoginPayload> = async (data) => {
     try {
       await login(data as LoginPayload);
       nav("/");
@@ -37,21 +36,21 @@ export default function LoginForm() {
           }
         )?.response?.data?.message ||
         (err as { message?: string })?.message ||
-        "Erro desconhecido";
+        t("formLogin.errors.unknownError");
 
-      setError("root" as FieldPath<LoginValues>, { type: "server", message });
+      setError("root" as FieldPath<LoginPayload>, { type: "server", message });
     }
   };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
       <div className="space-y-2">
-        <Label htmlFor="email">Email</Label>
+        <Label htmlFor="email">{t("formLogin.email")}</Label>
 
         <Input
           id="email"
           type="email"
-          placeholder="seu@email.com"
+          placeholder={t("formLogin.emailPlaceholder")}
           className="h-11"
           {...register("email")}
           required
@@ -61,12 +60,12 @@ export default function LoginForm() {
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="password">Senha</Label>
+        <Label htmlFor="password">{t("formLogin.password")}</Label>
 
         <Input
           id="password"
           type="password"
-          placeholder="••••••••"
+          placeholder={t("formLogin.passwordPlaceholder")}
           className="h-11"
           {...register("password")}
           required
@@ -80,7 +79,7 @@ export default function LoginForm() {
       )}
 
       <Button type="submit" disabled={isSubmitting} className="w-full">
-        Entrar
+        {t("formLogin.buttonSubmit")}
       </Button>
     </form>
   );

@@ -1,0 +1,48 @@
+{
+  "userProfileTitle": "Perfil do Usuário",
+  "userProfileDescription": "Gerencie as informações e preferências do seu perfil.",
+  "loadingAvatar": "Carregando avatar...",
+  "typeFileTitle": "JPG, PNG ou GIF, Máximo de 2 MB",
+  "notificationEmailTitle": "Notificações por Email",
+  "notificationEmailDescription": "Receba atualizações por e-mail sobre mudanças climáticas",
+  "alertMeteorologicosTitle": "Alertas Meteorológicos",
+  "alertMeteorologicosDescription": "Receba notificações sobre alertas meteorológicos severos",
+  "dangerAlertTitle": "Zona de Perigo",
+  "dangerAlertDescription": "Ações irreversíveis - use com cautela",
+  "buttonDeleteAccount": "Excluir Conta",
+  "buttonExportData": "Exportar Dados",
+  "buttonCancel": "Cancelar",
+  "buttonSaveChanges": "Salvar Alterações",
+  "form": {
+    "formTitle": "Criar Conta!",
+    "formSubtitle": "Preencha os dados para criar sua conta",
+    "formMessage": "Já tem uma conta? ",
+    "formButton": "Fazer Login"
+  },
+  "formCreate": {
+    "name": "Nome Completo",
+    "email": "Email",
+    "bio": "Biografia",
+    "location": "Localização",
+    "password": "Senha",
+    "confirmPassword": "Confirmar Senha",
+    "buttonSubmit": "Criar Conta",
+    "namePlaceholder": "seu nome completo",
+    "emailPlaceholder": "seu@email.com",
+    "bioPlaceholder": "sua biografia",
+    "locationPlaceholder": "sua localização",
+    "passwordPlaceholder": "sua senha",
+    "confirmPasswordPlaceholder": "confirme sua senha",
+    "errors": {
+      "unknownError": "Ocorreu um erro desconhecido. Por favor, tente novamente mais tarde.",
+      "emailErrorInvalid": "Por favor, insira um email válido.",
+      "passwordErrorCharacters": "A senha deve ter ao menos 6 caracteres.",
+      "confirmPasswordErrorMatch": "As senhas não coincidem.",
+      "urlErrorInvalid": "Por favor, insira uma URL válida."
+    }
+  },
+  "menu": {
+    "profile": "Perfil",
+    "settings": "Configurações"
+  }
+}

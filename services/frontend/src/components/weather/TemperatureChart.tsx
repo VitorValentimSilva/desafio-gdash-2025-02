@@ -7,16 +7,19 @@ import {
   YAxis,
 } from "recharts";
 import { Card } from "@/components/ui/card";
+import { useTranslation } from "react-i18next";
 
 interface TemperatureChartProps {
   data: Array<{ hour: string; temp: number }>;
 }
 
 export default function TemperatureChart({ data }: TemperatureChartProps) {
+  const { t } = useTranslation("weather");
+
   return (
     <Card className="p-6 hover-lift animate-fade-in">
       <h3 className="text-lg font-semibold mb-4">
-        Temperatura nas últimas 24h
+        {t("temperatureLast24Hours")}
       </h3>
 
       <ResponsiveContainer width="100%" height={300}>
@@ -62,7 +65,7 @@ export default function TemperatureChart({ data }: TemperatureChartProps) {
               padding: "8px 12px",
             }}
             labelStyle={{ color: "hsl(var(--foreground))", fontWeight: 600 }}
-            formatter={(value: number) => [`${value}°C`, "Temperatura"]}
+            formatter={(value: number) => [`${value}°C`, t("temperature")]}
           />
 
           <Area

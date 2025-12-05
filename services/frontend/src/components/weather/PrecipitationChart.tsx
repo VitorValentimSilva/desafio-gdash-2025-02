@@ -8,22 +8,35 @@ import {
   YAxis,
 } from "recharts";
 import { Card } from "@/components/ui/card";
+import { useLanguage } from "@/hooks/useLanguage";
+import { useTranslation } from "react-i18next";
 
 interface PrecipitationChartProps {
   data: number[];
 }
 
 export default function PrecipitationChart({ data }: PrecipitationChartProps) {
-  const chartData = data.map((prob, index) => ({
-    hour: `${index.toString().padStart(2, "0")}:00`,
-    probability: prob,
-  }));
+  const { locale } = useLanguage();
+  const { t } = useTranslation("weather");
+
+  const chartData = data.map((prob, index) => {
+    const date = new Date();
+    date.setHours(index);
+    date.setMinutes(0);
+    date.setSeconds(0);
+
+    return {
+      hour: date.toLocaleTimeString(locale, {
+        hour: "2-digit",
+        minute: "2-digit",
+      }),
+      probability: prob,
+    };
+  });
 
   return (
     <Card className="p-6 hover-lift animate-fade-in">
-      <h3 className="text-lg font-semibold mb-4">
-        Probabilidade de Chuva (24h)
-      </h3>
+      <h3 className="text-lg font-semibold mb-4">{t("probabilityOfRain")}</h3>
 
       <ResponsiveContainer width="100%" height={280}>
         <AreaChart data={chartData}>
@@ -75,7 +88,7 @@ export default function PrecipitationChart({ data }: PrecipitationChartProps) {
               padding: "8px 12px",
             }}
             labelStyle={{ color: "hsl(var(--foreground))", fontWeight: 600 }}
-            formatter={(value: number) => [`${value}%`, "Probabilidade"]}
+            formatter={(value: number) => [`${value}%`, t("probability")]}
           />
 
           <Area

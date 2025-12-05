@@ -1,0 +1,32 @@
+{
+  "title": "Pokédex",
+  "subtitle": "Explore a vasta coleção de Pokémons e descubra suas características únicas.",
+  "all": "Todos",
+  "selected": "Selecionado(s)",
+  "noPokemonFound": "Nenhum Pokémon encontrado.",
+  "paginationInfo": "Página {{page}} de {{totalPages}}",
+  "weaknesses": "Fraquezas",
+  "loadingDetail": "Carregando Detalhes...",
+  "loadingTypes": "Carregando Tipos...",
+  "loadingPokemon": "Carregando Pokémons...",
+  "buttonClear": "Limpar",
+  "buttonClose": "Fechar",
+  "buttonCleanAll": "Limpar Tudo",
+  "inputs": {
+    "searchTitle": "Buscar Pokémon",
+    "searchPlaceholder": "Digite o nome do Pokémon...",
+    "orderTitle": "Ordenar",
+    "orderPlaceholder": "Selecione uma opção",
+    "orderOptionNumberPokemon": "Número do Pokémon",
+    "orderOptionNameAZ": "Nome (A-Z)",
+    "orderOptionNameZA": "Nome (Z-A)",
+    "typeTitle": "Filtrar por Tipo",
+    "typeEdit": "Editar",
+    "typeSelect": "Selecionar"
+  },
+  "errors": {
+    "errorLoadingPokemon": "Erro ao carregar os Pokémons. Por favor, tente novamente.",
+    "errorLoadingTypesPokemon": "Erro ao carregar os tipos dos Pokémons. Por favor, tente novamente.",
+    "errorLoadingPokemonDetail": "Erro ao carregar os detalhes do Pokémon. Por favor, tente novamente."
+  }
+}

@@ -5,11 +5,16 @@ import { useComputedInsights } from "@/hooks/useComputedInsights";
 import InsightsChart from "@/components/insights/InsightsChart";
 import InsightCard from "@/components/insights/InsightCard";
 import AnimatedTrend from "@/components/insights/AnimatedTrend";
+import { useTranslation } from "react-i18next";
+import { useLanguage } from "@/hooks/useLanguage";
 
 export default function InsightsPanel() {
   const { logs, fetchLogs, loading: logsLoading } = useWeatherLogs(48);
   const { insight, fetchInsight, loading: insightLoading } = useInsights(24);
-  const computed = useComputedInsights(logs);
+  const { t } = useTranslation("weather");
+  const { locale } = useLanguage();
+
+  const computed = useComputedInsights(logs, t);
   const latest = logs?.[0];
 
   async function handleRefresh() {
@@ -19,7 +24,7 @@ export default function InsightsPanel() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h3 className="text-lg font-semibold">Insights</h3>
+        <h3 className="text-lg font-semibold">{t("insights")}</h3>
 
         <div className="flex items-center gap-4">
           <AnimatedTrend
@@ -34,8 +39,8 @@ export default function InsightsPanel() {
             aria-disabled={logsLoading || insightLoading}
           >
             {logsLoading || insightLoading
-              ? "Atualizando..."
-              : "Atualizar insights"}
+              ? t("updating")
+              : t("updateInsights")}
           </button>
         </div>
       </div>
@@ -46,14 +51,16 @@ export default function InsightsPanel() {
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <Card className="p-4">
-          <div className="text-sm text-muted-foreground mb-2">Resumo</div>
+          <div className="text-sm text-muted-foreground mb-2">
+            {t("summary")}
+          </div>
 
           <div className="text-base font-medium">
             {typeof insight?.summary === "string"
               ? insight.summary
               : typeof insight?.text === "string"
               ? insight.text
-              : "Sem dados suficientes"}
+              : t("noData")}
           </div>
 
           <div className="mt-3 flex gap-2 flex-wrap">
@@ -74,7 +81,7 @@ export default function InsightsPanel() {
         </Card>
 
         <Card className="p-4">
-          <div className="text-xs text-muted-foreground">Último registro</div>
+          <div className="text-xs text-muted-foreground">{t("lastEntry")}</div>
 
           {latest ? (
             <>
@@ -82,44 +89,50 @@ export default function InsightsPanel() {
                 {latest.location?.city ?? "—"}
               </div>
               <div className="text-sm text-muted-foreground">
-                {new Date(latest.collected_at).toLocaleString()}
+                {new Date(latest.collected_at).toLocaleString(locale, {
+                  dateStyle: "short",
+                  timeStyle: "short",
+                })}
               </div>
 
               <div className="mt-3 grid grid-cols-2 gap-2 text-sm">
                 <div>
-                  Temp:{" "}
+                  {t("temperature")}:{" "}
                   <strong>{latest.current?.temperature_c ?? "—"}°C</strong>
                 </div>
                 <div>
-                  Umid:{" "}
+                  {t("humidity")}:{" "}
                   <strong>
                     {latest.current?.relative_humidity_percent ?? "—"}%
                   </strong>
                 </div>
                 <div>
-                  Vento:{" "}
+                  {t("wind")}:{" "}
                   <strong>{latest.current?.wind_speed_m_s ?? "—"} m/s</strong>
                 </div>
                 <div>
-                  Pressão:{" "}
+                  {t("pressure")}:{" "}
                   <strong>{latest.current?.pressure_msl_hpa ?? "—"} hPa</strong>
                 </div>
               </div>
             </>
           ) : (
-            <div className="text-sm">Sem dados</div>
+            <div className="text-sm">{t("noData")}</div>
           )}
         </Card>
 
         <Card className="p-4">
-          <div className="text-xs text-muted-foreground">Classificação</div>
+          <div className="text-xs text-muted-foreground">
+            {t("classification")}
+          </div>
 
           <div className="text-lg font-semibold">
             {computed?.classification ?? "—"}
           </div>
 
           <div className="text-sm text-muted-foreground mt-2">
-            Conforto: <strong>{computed?.comfort_score ?? "—"}/100</strong>
+            {t("comfort")}:{" "}
+            <strong>{computed?.comfort_score ?? "—"}/100</strong>
           </div>
         </Card>
       </div>

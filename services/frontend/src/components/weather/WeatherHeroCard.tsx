@@ -1,6 +1,7 @@
 import { Droplets, Gauge, Wind } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import AnimatedWeatherIcon from "@/components/weather/AnimatedWeatherIcon";
+import { useTranslation } from "react-i18next";
 
 interface WeatherHeroCardProps {
   city: string;
@@ -19,6 +20,8 @@ export default function WeatherHeroCard({
   wind,
   pressure,
 }: WeatherHeroCardProps) {
+  const { t } = useTranslation("weather");
+
   return (
     <Card className="relative overflow-hidden p-8 gradient-primary border-0 hover-lift animate-fade-in">
       <div className="absolute inset-0 opacity-20">
@@ -48,7 +51,7 @@ export default function WeatherHeroCard({
             <div className="flex items-center gap-2 mb-1">
               <Droplets className="w-4 h-4 text-white/70" />
 
-              <span className="text-white/70 text-sm">Umidade</span>
+              <span className="text-white/70 text-sm">{t("humidity")}</span>
             </div>
             <div className="text-white text-xl font-semibold">{humidity}</div>
           </div>
@@ -57,7 +60,7 @@ export default function WeatherHeroCard({
             <div className="flex items-center gap-2 mb-1">
               <Wind className="w-4 h-4 text-white/70" />
 
-              <span className="text-white/70 text-sm">Vento</span>
+              <span className="text-white/70 text-sm">{t("wind")}</span>
             </div>
             <div className="text-white text-xl font-semibold">{wind}</div>
           </div>
@@ -66,7 +69,7 @@ export default function WeatherHeroCard({
             <div className="flex items-center gap-2 mb-1">
               <Gauge className="w-4 h-4 text-white/70" />
 
-              <span className="text-white/70 text-sm">Pressão</span>
+              <span className="text-white/70 text-sm">{t("pressure")}</span>
             </div>
             <div className="text-white text-xl font-semibold">{pressure}</div>
           </div>

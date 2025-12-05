@@ -19,13 +19,13 @@ dotenv.config();
       },
     ),
     I18nModule.forRoot({
-      fallbackLanguage: 'en',
+      fallbackLanguage: 'pt-BR',
       loaderOptions: {
         path: path.join(__dirname, '/locales/'),
         watch: true,
       },
       resolvers: [
-        { use: QueryResolver, options: ['lang'] },
+        { use: QueryResolver, options: ['Accept-Language'] },
         AcceptLanguageResolver,
       ],
     }),

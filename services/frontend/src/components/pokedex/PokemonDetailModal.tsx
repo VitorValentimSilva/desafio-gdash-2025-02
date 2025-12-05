@@ -2,6 +2,7 @@ import { formatPokedexNumber, getTypeBadgeClass } from "@/lib/pokemon";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import type { PokemonDetail } from "@/types/pokemon";
+import { useTranslation } from "react-i18next";
 
 interface PokemonDetailModalProps {
   open: boolean;
@@ -14,6 +15,8 @@ export default function PokemonDetailModal({
   onClose,
   data,
 }: PokemonDetailModalProps) {
+  const { t } = useTranslation("poke");
+
   if (!open || !data) return null;
 
   return (
@@ -67,7 +70,9 @@ export default function PokemonDetailModal({
 
             {data.weaknesses && data.weaknesses.length > 0 && (
               <div className="mt-3">
-                <div className="text-sm text-muted-foreground">Fraquezas</div>
+                <div className="text-sm text-muted-foreground">
+                  {t("weaknesses")}
+                </div>
                 <div className="flex gap-2 flex-wrap mt-2">
                   {data.weaknesses.map((w) => (
                     <span
@@ -99,7 +104,7 @@ export default function PokemonDetailModal({
 
             <div className="mt-6 flex gap-2">
               <Button onClick={onClose} className="w-full">
-                Fechar
+                {t("buttonClose")}
               </Button>
             </div>
           </div>

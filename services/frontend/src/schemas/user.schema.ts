@@ -1,32 +1,40 @@
 import { z } from "zod";
+import type { TFunction } from "i18next";
 
-export const createUserSchema = z
-  .object({
-    email: z.email({ message: "Email inválido" }),
+export const createUserSchema = (t: TFunction<"user">) =>
+  z
+    .object({
+      email: z.email({ message: t("formCreate.errors.emailErrorInvalid") }),
+      password: z
+        .string()
+        .min(6, { message: t("formCreate.errors.passwordErrorCharacters") }),
+      confirmPassword: z
+        .string()
+        .min(1, { message: t("formCreate.errors.confirmPasswordErrorMatch") }),
+      role: z.string().optional(),
+      name: z.string().optional(),
+      bio: z.string().optional(),
+      location: z.string().optional(),
+      photo: z
+        .url({ message: t("formCreate.errors.urlErrorInvalid") })
+        .optional(),
+    })
+    .refine((data) => data.password === data.confirmPassword, {
+      message: t("formCreate.errors.confirmPasswordErrorMatch"),
+      path: ["confirmPassword"],
+    });
+
+export const updateUserSchema = (t: TFunction<"user">) =>
+  createUserSchema(t).partial();
+
+export const loginSchema = (t: TFunction<"auth">) =>
+  z.object({
+    email: z.email({ message: t("formLogin.errors.emailErrorInvalid") }),
     password: z
       .string()
-      .min(6, { message: "Senha deve ter ao menos 6 caracteres" }),
-    confirmPassword: z.string().min(1, { message: "Confirme a senha" }),
-    role: z.string().optional(),
-    name: z.string().optional(),
-    bio: z.string().optional(),
-    location: z.string().optional(),
-    photo: z.url({ message: "URL inválida" }).optional(),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "As senhas não coincidem",
-    path: ["confirmPassword"],
+      .min(6, { message: t("formLogin.errors.passwordErrorCharacters") }),
   });
 
-export const updateUserSchema = createUserSchema.partial();
-
-export const loginSchema = z.object({
-  email: z.email({ message: "Email inválido" }),
-  password: z
-    .string()
-    .min(6, { message: "Senha deve ter ao menos 6 caracteres" }),
-});
-
-export type CreateUserPayload = z.infer<typeof createUserSchema>;
-export type UpdateUserPayload = z.infer<typeof updateUserSchema>;
-export type LoginPayload = z.infer<typeof loginSchema>;
+export type CreateUserPayload = z.infer<ReturnType<typeof createUserSchema>>;
+export type UpdateUserPayload = z.infer<ReturnType<typeof updateUserSchema>>;
+export type LoginPayload = z.infer<ReturnType<typeof loginSchema>>;

@@ -1,4 +1,5 @@
 import { ArrowUp, ArrowDown } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 export default function AnimatedTrend({
   trend,
@@ -7,6 +8,8 @@ export default function AnimatedTrend({
   trend: number;
   comfort: number;
 }) {
+  const { t } = useTranslation("weather");
+
   const up = trend > 0.05;
   const down = trend < -0.05;
 
@@ -23,15 +26,15 @@ export default function AnimatedTrend({
       </div>
 
       <div>
-        <div className="text-xs text-muted-foreground">Tendência</div>
+        <div className="text-xs text-muted-foreground">{t("tendency")}</div>
 
         <div className="font-semibold">
-          {up ? "Subindo" : down ? "Caindo" : "Estável"}
+          {up ? t("up") : down ? t("down") : t("stable")}
         </div>
       </div>
 
       <div className="ml-6">
-        <div className="text-xs text-muted-foreground">Conforto</div>
+        <div className="text-xs text-muted-foreground">{t("comfort")}</div>
         <div className="font-semibold">{comfort}/100</div>
       </div>
     </div>

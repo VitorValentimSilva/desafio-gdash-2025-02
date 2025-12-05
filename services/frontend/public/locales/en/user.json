@@ -1,0 +1,48 @@
+{
+  "userProfileTitle": "User Profile",
+  "userProfileDescription": "Manage your profile information and preferences.",
+  "loadingAvatar": "Loading avatar...",
+  "typeFileTitle": "JPG, PNG, or GIF, Maximum 2 MB",
+  "notificationEmailTitle": "Email Notifications",
+  "notificationEmailDescription": "Receive email updates about climate change",
+  "alertMeteorologicosTitle": "Weather Alerts",
+  "alertMeteorologicosDescription": "Receive notifications about severe weather alerts",
+  "dangerAlertTitle": "Danger Zone",
+  "dangerAlertDescription": "Irreversible actions - use with caution",
+  "buttonDeleteAccount": "Delete Account",
+  "buttonExportData": "Export Data",
+  "buttonCancel": "Cancel",
+  "buttonSaveChanges": "Save Changes",
+  "form": {
+    "formTitle": "Create Account!",
+    "formSubtitle": "Fill in the details to create your account",
+    "formMessage": "Already have an account? ",
+    "formButton": "Sign In"
+  },
+  "formCreate": {
+    "name": "Full Name",
+    "email": "Email",
+    "bio": "Biography",
+    "location": "Location",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "buttonSubmit": "Create Account",
+    "namePlaceholder": "your full name",
+    "emailPlaceholder": "your@email.com",
+    "bioPlaceholder": "your biography",
+    "locationPlaceholder": "your location",
+    "passwordPlaceholder": "your password",
+    "confirmPasswordPlaceholder": "confirm your password",
+    "errors": {
+      "unknownError": "An unknown error occurred. Please try again later.",
+      "emailErrorInvalid": "Please enter a valid email.",
+      "passwordErrorCharacters": "Password must be at least 6 characters long.",
+      "confirmPasswordErrorMatch": "Passwords do not match.",
+      "urlErrorInvalid": "Please enter a valid URL."
+    }
+  },
+  "menu": {
+    "profile": "Profile",
+    "settings": "Settings"
+  }
+}

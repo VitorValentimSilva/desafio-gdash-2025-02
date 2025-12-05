@@ -12,6 +12,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
+import { useTranslation } from "react-i18next";
 
 interface PokedexFiltersProps {
   value?: Partial<FiltersState>;
@@ -30,6 +31,8 @@ export default function PokedexFilters({
   const [typesOpen, setTypesOpen] = useState(false);
   const [loadingTypes, setLoadingTypes] = useState(false);
   const [typesError, setTypesError] = useState<string | null>(null);
+
+  const { t } = useTranslation("poke");
 
   useEffect(() => {
     const t = setTimeout(() => {
@@ -76,7 +79,7 @@ export default function PokedexFilters({
         }
       } catch {
         if (mounted) {
-          setTypesError("Falha ao carregar tipos");
+          setTypesError(t("errors.errorLoadingTypesPokemon"));
           setAvailableTypes([]);
         }
       } finally {
@@ -89,7 +92,7 @@ export default function PokedexFilters({
     return () => {
       mounted = false;
     };
-  }, []);
+  }, [t]);
 
   const toggleType = (typeName: string) => {
     setTypes((prev) =>
@@ -107,8 +110,8 @@ export default function PokedexFilters({
   };
 
   const typesBadge = useMemo(
-    () => (types.length === 0 ? "Todos" : `${types.length} selecionado(s)`),
-    [types]
+    () => (types.length === 0 ? t("all") : `${types.length} ${t("selected")}`),
+    [types, t]
   );
 
   return (
@@ -116,37 +119,44 @@ export default function PokedexFilters({
       <div className="flex flex-col md:flex-row gap-3 items-end">
         <div className="w-full md:w-auto flex-1">
           <Label htmlFor="search" className="mb-2">
-            Buscar Pokémon
+            {t("inputs.searchTitle")}
           </Label>
 
           <Input
             id="search"
             value={q}
             onChange={(e) => setQ(e.target.value)}
-            placeholder="Digite o nome do Pokémon..."
+            placeholder={t("inputs.searchPlaceholder")}
           />
         </div>
 
         <div className="w-full md:w-40">
           <Label htmlFor="order" className="mb-2">
-            Ordenar
+            {t("inputs.orderTitle")}
           </Label>
 
           <Select value={order} onValueChange={(v: Order) => setOrder(v)}>
             <SelectTrigger>
-              <SelectValue placeholder="Ordenar" />
+              <SelectValue placeholder={t("inputs.orderPlaceholder")} />
             </SelectTrigger>
+
             <SelectContent>
-              <SelectItem value="pokedex">Pokedex (nº)</SelectItem>
-              <SelectItem value="az">A → Z</SelectItem>
-              <SelectItem value="za">Z → A</SelectItem>
+              <SelectItem value="pokedex">
+                {t("inputs.orderOptionNumberPokemon")}
+              </SelectItem>
+              <SelectItem value="az">
+                {t("inputs.orderOptionNameAZ")}
+              </SelectItem>
+              <SelectItem value="za">
+                {t("inputs.orderOptionNameZA")}
+              </SelectItem>
             </SelectContent>
           </Select>
         </div>
 
         <div className="w-full md:w-56 relative">
           <Label htmlFor="types" className="mb-2">
-            Tipos
+            {t("inputs.typeTitle")}
           </Label>
 
           <Button
@@ -157,14 +167,14 @@ export default function PokedexFilters({
           >
             <span className="text-sm text-muted-foreground">{typesBadge}</span>
             <span className="text-xs text-muted-foreground">
-              {types.length > 0 ? "Editar" : "Selecionar"}
+              {types.length > 0 ? t("inputs.typeEdit") : t("inputs.typeSelect")}
             </span>
           </Button>
 
           {typesOpen && (
             <div className="absolute z-50 mt-2 w-full bg-background border rounded-md shadow-lg p-3 max-h-64 overflow-auto">
               {loadingTypes ? (
-                <div>Carregando tipos...</div>
+                <div>{t("loadingTypes")}</div>
               ) : typesError ? (
                 <div className="text-red-500">{typesError}</div>
               ) : (
@@ -197,10 +207,11 @@ export default function PokedexFilters({
                     setTypesOpen(false);
                   }}
                 >
-                  Limpar
+                  {t("buttonClear")}
                 </Button>
+
                 <Button size="sm" onClick={() => setTypesOpen(false)}>
-                  Fechar
+                  {t("buttonClose")}
                 </Button>
               </div>
             </div>
@@ -209,7 +220,7 @@ export default function PokedexFilters({
 
         <div className="flex items-end w-full md:w-auto">
           <Button variant="outline" onClick={clearFilters}>
-            Reset
+            {t("buttonCleanAll")}
           </Button>
         </div>
       </div>

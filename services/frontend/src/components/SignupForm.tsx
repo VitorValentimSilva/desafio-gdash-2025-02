@@ -4,17 +4,16 @@ import {
   createUserSchema,
   type CreateUserPayload,
 } from "@/schemas/user.schema";
-import type z from "zod";
 import { useUsersApi } from "@/hooks/useUsersApi";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
-
-type SignupValues = z.infer<typeof createUserSchema>;
+import { useTranslation } from "react-i18next";
 
 export default function SignupForm() {
   const { create } = useUsersApi();
+  const { t } = useTranslation("user");
   const nav = useNavigate();
 
   const {
@@ -22,8 +21,8 @@ export default function SignupForm() {
     handleSubmit,
     formState: { errors, isSubmitting },
     setError,
-  } = useForm<SignupValues>({
-    resolver: zodResolver(createUserSchema),
+  } = useForm<CreateUserPayload>({
+    resolver: zodResolver(createUserSchema(t)),
     defaultValues: {
       name: "",
       email: "",
@@ -36,7 +35,7 @@ export default function SignupForm() {
     },
   });
 
-  const onSubmit: SubmitHandler<SignupValues> = async (data) => {
+  const onSubmit: SubmitHandler<CreateUserPayload> = async (data) => {
     try {
       const { confirmPassword, ...payload } = data;
       void confirmPassword;
@@ -52,21 +51,24 @@ export default function SignupForm() {
           }
         )?.response?.data?.message ||
         (err as { message?: string })?.message ||
-        "Erro desconhecido";
+        t("formCreate.errors.unknownError");
 
-      setError("root" as FieldPath<SignupValues>, { type: "server", message });
+      setError("root" as FieldPath<CreateUserPayload>, {
+        type: "server",
+        message,
+      });
     }
   };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
       <div className="space-y-2">
-        <Label htmlFor="name">Nome Completo</Label>
+        <Label htmlFor="name">{t("formCreate.name")}</Label>
 
         <Input
           id="name"
           {...register("name")}
-          placeholder="Vitor Valentim"
+          placeholder={t("formCreate.namePlaceholder")}
           className="h-11"
           required
         />
@@ -75,12 +77,12 @@ export default function SignupForm() {
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="email">Email</Label>
+        <Label htmlFor="email">{t("formCreate.email")}</Label>
 
         <Input
           id="email"
           type="email"
-          placeholder="seu@email.com"
+          placeholder={t("formCreate.emailPlaceholder")}
           className="h-11"
           {...register("email")}
           required
@@ -90,12 +92,12 @@ export default function SignupForm() {
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="biography">Biografia</Label>
+        <Label htmlFor="biography">{t("formCreate.bio")}</Label>
 
         <Input
           id="biography"
           type="text"
-          placeholder="Sua biografia"
+          placeholder={t("formCreate.bioPlaceholder")}
           className="h-11"
           {...register("bio")}
           required
@@ -105,12 +107,12 @@ export default function SignupForm() {
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="location">Localização</Label>
+        <Label htmlFor="location">{t("formCreate.location")}</Label>
 
         <Input
           id="location"
           type="text"
-          placeholder="Sua localização"
+          placeholder={t("formCreate.locationPlaceholder")}
           className="h-11"
           {...register("location")}
           required
@@ -120,12 +122,12 @@ export default function SignupForm() {
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="password">Senha</Label>
+        <Label htmlFor="password">{t("formCreate.password")}</Label>
 
         <Input
           id="password"
           type="password"
-          placeholder="••••••••"
+          placeholder={t("formCreate.passwordPlaceholder")}
           className="h-11"
           {...register("password")}
           required
@@ -135,12 +137,14 @@ export default function SignupForm() {
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="confirmPassword">Confirme a senha</Label>
+        <Label htmlFor="confirmPassword">
+          {t("formCreate.confirmPassword")}
+        </Label>
 
         <Input
           id="confirmPassword"
           type="password"
-          placeholder="••••••••"
+          placeholder={t("formCreate.confirmPasswordPlaceholder")}
           className="h-11"
           {...register("confirmPassword")}
           required
@@ -156,7 +160,7 @@ export default function SignupForm() {
       )}
 
       <Button type="submit" disabled={isSubmitting} className="w-full">
-        Criar Conta
+        {t("formCreate.buttonSubmit")}
       </Button>
     </form>
   );

@@ -1,12 +1,15 @@
 import { Compass, Home } from "lucide-react";
 import Header from "@/components/Header";
 import { getToken } from "@/lib/tokenStorage";
+import { useTranslation } from "react-i18next";
 
 interface LayoutProps {
   children: React.ReactNode;
 }
 
 export default function Layout({ children }: LayoutProps) {
+  const { t } = useTranslation("common");
+
   const token = getToken();
 
   return (
@@ -14,8 +17,10 @@ export default function Layout({ children }: LayoutProps) {
       <Header
         title="WeatherPro"
         navItems={[
-          ...(token ? [{ title: "Dashboard", path: "/", icon: Home }] : []),
-          { title: "Pokédex", path: "/pokedex", icon: Compass },
+          ...(token
+            ? [{ title: t("menu.dashboard"), path: "/", icon: Home }]
+            : []),
+          { title: t("menu.pokedex"), path: "/pokedex", icon: Compass },
         ]}
       />
 

@@ -1,5 +1,6 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useTranslation } from "react-i18next";
 
 interface Props {
   page: number;
@@ -12,6 +13,8 @@ export default function PokedexPagination({
   totalPages,
   onChange,
 }: Props) {
+  const { t } = useTranslation("poke");
+
   return (
     <div className="flex items-center justify-center gap-3">
       <Button
@@ -24,7 +27,7 @@ export default function PokedexPagination({
       </Button>
 
       <div className="px-3 py-2 rounded-md bg-surface/6">
-        Página {page} de {totalPages}
+        {t("paginationInfo", { page, totalPages })}
       </div>
 
       <Button

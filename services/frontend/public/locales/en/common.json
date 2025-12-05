@@ -1,0 +1,18 @@
+{
+  "language": {
+    "selectLanguage": "Select Language",
+    "english": "English",
+    "portuguese": "Portuguese (Brazil)",
+    "englishShort": "EN",
+    "portugueseShort": "PT-BR"
+  },
+  "menu": {
+    "dashboard": "Dashboard",
+    "pokedex": "Pokedex"
+  },
+  "pageNotFound": {
+    "code": "404",
+    "title": "Oops! Page Not Found",
+    "goHomeMessage": "Go back to Dashboard"
+  }
+}

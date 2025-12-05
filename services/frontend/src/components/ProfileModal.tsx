@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Globe, Mail, MapPin, Save, Upload, User } from "lucide-react";
+import { Mail, MapPin, Save, Upload, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -15,6 +15,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { useTranslation } from "react-i18next";
 
 interface ProfileModalProps {
   title: string;
@@ -30,6 +31,8 @@ export default function ProfileModal({
   description,
   tabsTriggers,
 }: ProfileModalProps) {
+  const { t } = useTranslation("user");
+
   const [open, setOpen] = useState(false);
   const [profileData, setProfileData] = useState({
     name: "Ana Silva",
@@ -111,18 +114,18 @@ export default function ProfileModal({
                   className="gap-2"
                 >
                   <Upload className="w-4 h-4" />
-                  Carregar avatar
+                  {t("loadingAvatar")}
                 </Button>
 
                 <p className="text-xs text-muted-foreground">
-                  JPG, PNG ou GIF. Máximo de 2 MB.
+                  {t("typeFileTitle")}
                 </p>
               </div>
             </div>
 
             <div className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="name">Nome Completo</Label>
+                <Label htmlFor="name">{t("formCreate.name")}</Label>
 
                 <Input
                   id="name"
@@ -130,12 +133,12 @@ export default function ProfileModal({
                   onChange={(e) =>
                     setProfileData({ ...profileData, name: e.target.value })
                   }
-                  placeholder="Digite seu nome completo..."
+                  placeholder={t("formCreate.namePlaceholder")}
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="email">{t("formCreate.email")}</Label>
 
                 <div className="relative">
                   <Mail className="absolute left-3 top-3 w-4 h-4 text-muted-foreground" />
@@ -148,13 +151,13 @@ export default function ProfileModal({
                       setProfileData({ ...profileData, email: e.target.value })
                     }
                     className="pl-10"
-                    placeholder="seu@email.com"
+                    placeholder={t("formCreate.emailPlaceholder")}
                   />
                 </div>
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="bio">Bio</Label>
+                <Label htmlFor="bio">{t("formCreate.bio")}</Label>
 
                 <Textarea
                   id="bio"
@@ -162,19 +165,15 @@ export default function ProfileModal({
                   onChange={(e) =>
                     setProfileData({ ...profileData, bio: e.target.value })
                   }
-                  placeholder="Fale sobre você"
+                  placeholder={t("formCreate.bioPlaceholder")}
                   rows={4}
                   className="resize-none"
                 />
-
-                <p className="text-xs text-muted-foreground">
-                  {profileData.bio.length}/200 caracteres
-                </p>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="location">Localização</Label>
+                  <Label htmlFor="location">{t("formCreate.location")}</Label>
 
                   <div className="relative">
                     <MapPin className="absolute left-3 top-3 w-4 h-4 text-muted-foreground" />
@@ -189,28 +188,7 @@ export default function ProfileModal({
                         })
                       }
                       className="pl-10"
-                      placeholder="Cidade, País"
-                    />
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="website">Website</Label>
-
-                  <div className="relative">
-                    <Globe className="absolute left-3 top-3 w-4 h-4 text-muted-foreground" />
-
-                    <Input
-                      id="website"
-                      value={profileData.website}
-                      onChange={(e) =>
-                        setProfileData({
-                          ...profileData,
-                          website: e.target.value,
-                        })
-                      }
-                      className="pl-10"
-                      placeholder="https://seusite.com"
+                      placeholder={t("formCreate.locationPlaceholder")}
                     />
                   </div>
                 </div>
@@ -223,11 +201,11 @@ export default function ProfileModal({
               <div className="flex items-center justify-between p-4 border border-border rounded-lg">
                 <div className="space-y-0.5">
                   <Label htmlFor="email-notifications" className="text-base">
-                    Notificações por e-mail
+                    {t("notificationEmailTitle")}
                   </Label>
 
                   <p className="text-sm text-muted-foreground">
-                    Receba atualizações por e-mail sobre mudanças climáticas
+                    {t("notificationEmailDescription")}
                   </p>
                 </div>
 
@@ -243,11 +221,11 @@ export default function ProfileModal({
               <div className="flex items-center justify-between p-4 border border-border rounded-lg">
                 <div className="space-y-0.5">
                   <Label htmlFor="weather-alerts" className="text-base">
-                    Alertas Meteorológicos
+                    {t("alertMeteorologicosTitle")}
                   </Label>
 
                   <p className="text-sm text-muted-foreground">
-                    Receba notificações sobre alertas meteorológicos severos
+                    {t("alertMeteorologicosDescription")}
                   </p>
                 </div>
 
@@ -262,20 +240,20 @@ export default function ProfileModal({
 
               <div className="p-4 border border-border rounded-lg space-y-3">
                 <div className="space-y-0.5">
-                  <Label className="text-base">Zona de Perigo</Label>
+                  <Label className="text-base">{t("dangerAlertTitle")}</Label>
 
                   <p className="text-sm text-muted-foreground">
-                    Ações irreversíveis - use com cautela
+                    {t("dangerAlertDescription")}
                   </p>
                 </div>
 
                 <div className="flex flex-wrap gap-3">
                   <Button variant="destructive" size="sm" className="w-full">
-                    Excluir Conta
+                    {t("buttonDeleteAccount")}
                   </Button>
 
                   <Button variant="outline" size="sm" className="w-full">
-                    Exportar Dados
+                    {t("buttonExportData")}
                   </Button>
                 </div>
               </div>
@@ -285,7 +263,7 @@ export default function ProfileModal({
 
         <div className="flex justify-end gap-3 pt-4 border-t">
           <Button variant="outline" onClick={() => setOpen(false)}>
-            Cancelar
+            {t("buttonCancel")}
           </Button>
 
           <Button
@@ -295,7 +273,7 @@ export default function ProfileModal({
             className="gap-2 gradient-primary text-white"
           >
             <Save className="w-4 h-4" />
-            Salvar Alterações
+            {t("buttonSaveChanges")}
           </Button>
         </div>
       </DialogContent>

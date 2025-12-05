@@ -7,8 +7,12 @@ import {
 } from "@/lib/stats";
 import { weatherCodeToText } from "@/lib/weather";
 import type { WeatherLog } from "@/types/weather";
+import type { TFunction } from "i18next";
 
-export function useComputedInsights(logs: WeatherLog[]) {
+export function useComputedInsights(
+  logs: WeatherLog[],
+  t: TFunction<"weather">
+) {
   const summary = useMemo(() => {
     if (!logs || logs.length === 0) return null;
 
@@ -23,30 +27,32 @@ export function useComputedInsights(logs: WeatherLog[]) {
     const trend = simpleTrend(temps);
     const comfort = comfortScore(avgTemp, avgHum ?? null);
 
-    let classification = "Agradável";
+    let classification = t("pleasant");
     if (avgTemp != null) {
-      if (avgTemp >= 30) classification = "Quente";
-      else if (avgTemp <= 12) classification = "Frio";
-      else classification = "Agradável";
+      if (avgTemp >= 30) classification = t("warm");
+      else if (avgTemp <= 12) classification = t("cold");
+      else classification = t("pleasant");
     }
 
     const alerts: string[] = [];
 
     const latest = logs[0];
     const wcText = weatherCodeToText(
-      latest.current.weathercode as unknown as number
+      latest.current.weathercode as unknown as number,
+      t
     );
     if (/chuva|tempestade|chuvisco|rain/i.test(String(wcText))) {
-      alerts.push("Alta chance de chuva nas próximas horas");
+      alerts.push(t("alerts.highChanceOfRain"));
     }
-    if (avgTemp != null && avgTemp >= 34)
-      alerts.push("Calor extremo — hidratar-se");
-    if (avgTemp != null && avgTemp <= 5) alerts.push("Frio intenso — cuidado");
-
+    if (avgTemp != null && avgTemp >= 34) alerts.push(t("alerts.extremeHeat"));
+    if (avgTemp != null && avgTemp <= 5) alerts.push(t("alerts.extremeCold"));
     const textParts: string[] = [];
-    if (avgTemp != null) textParts.push(`Temp média: ${Math.round(avgTemp)}°C`);
-    if (avgHum != null) textParts.push(`Umidade média: ${Math.round(avgHum)}%`);
-    if (alerts.length) textParts.push(`Alertas: ${alerts.join("; ")}`);
+    if (avgTemp != null)
+      textParts.push(t("textParts.avgTemp", { value: Math.round(avgTemp) }));
+    if (avgHum != null)
+      textParts.push(t("textParts.avgHumidity", { value: Math.round(avgHum) }));
+    if (alerts.length)
+      textParts.push(t("textParts.alerts", { value: alerts.join("; ") }));
 
     return {
       samples: temps.length,
@@ -59,7 +65,7 @@ export function useComputedInsights(logs: WeatherLog[]) {
       text: textParts.join(" • "),
       series,
     };
-  }, [logs]);
+  }, [logs, t]);
 
   return summary;
 }

@@ -4,6 +4,7 @@ import PokedexPagination from "@/components/pokedex/PokedexPagination";
 import PokemonDetailModal from "@/components/pokedex/PokemonDetailModal";
 import { usePokedexList } from "@/hooks/usePokedexList";
 import { usePokemonDetail } from "@/hooks/usePokemonDetail";
+import { useTranslation } from "react-i18next";
 
 export default function PokedexPage() {
   const {
@@ -17,6 +18,7 @@ export default function PokedexPage() {
     setTypes,
     fetchPage,
   } = usePokedexList(12);
+  const { t } = useTranslation("poke");
 
   const {
     selected,
@@ -29,11 +31,8 @@ export default function PokedexPage() {
   return (
     <>
       <div className="mb-6">
-        <h1 className="text-3xl font-bold">Pokédex</h1>
-        <p className="text-muted-foreground">
-          Explore a vasta coleção de Pokémons e descubra suas características
-          únicas.
-        </p>
+        <h1 className="text-3xl font-bold">{t("title")}</h1>
+        <p className="text-muted-foreground">{t("subtitle")}</p>
       </div>
 
       {error && <div className="mb-4 text-red-500">{error}</div>}
@@ -67,7 +66,7 @@ export default function PokedexPage() {
 
       {detailLoading && (
         <div className="fixed bottom-6 right-6 bg-background/90 p-3 rounded shadow">
-          Carregando detalhes...
+          {t("loadingDetail")}
         </div>
       )}
 
