@@ -101,18 +101,18 @@ export class WeatherService {
   }
 
   async exportCsv(): Promise<string> {
-    const docs = (await this.weatherModel.find().lean().exec()) as Record<
-      string,
-      unknown
-    >[];
+    const docs = (await this.weatherModel
+      .find()
+      .lean()
+      .exec()) as unknown as Record<string, unknown>[];
     return toCsv(docs);
   }
 
   async exportXlsxBuffer(): Promise<Buffer> {
-    const rows = (await this.weatherModel.find().lean().exec()) as Record<
-      string,
-      unknown
-    >[];
+    const rows = (await this.weatherModel
+      .find()
+      .lean()
+      .exec()) as unknown as Record<string, unknown>[];
     const wb: Workbook = new ExcelJS.Workbook();
     const ws = wb.addWorksheet('weather');
 
