@@ -9,10 +9,13 @@ jest.mock('../utils/cloudinary.provider', () => ({
 }));
 
 import { uploadBufferToCloudinary } from '../utils/cloudinary.provider';
+import { I18nService } from 'nestjs-i18n';
 
 describe('UploadsService', () => {
   let service: UploadsService;
   let repo: Partial<Record<keyof UploadsRepository, jest.Mock>>;
+  let i18n: Partial<I18nService>;
+
   const mockSavedImage = {
     _id: 'some-id',
     filename: 'test.png',
@@ -30,6 +33,10 @@ describe('UploadsService', () => {
       findAll: jest.fn().mockResolvedValue([mockSavedImage]),
     };
 
+    i18n = {
+      t: jest.fn().mockImplementation((k: string) => k),
+    } as Partial<I18nService>;
+
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         UploadsService,
@@ -37,6 +44,7 @@ describe('UploadsService', () => {
           provide: UploadsRepository,
           useValue: repo,
         },
+        { provide: I18nService, useValue: i18n },
       ],
     }).compile();
 

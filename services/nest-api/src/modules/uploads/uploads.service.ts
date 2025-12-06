@@ -7,12 +7,16 @@ import {
 import { UploadsRepository } from './repositories/uploads.repository';
 import { ImageDocument } from './schemas/image.entity';
 import { uploadBufferToCloudinary } from './utils/cloudinary.provider';
+import { I18nService } from 'nestjs-i18n';
 
 @Injectable()
 export class UploadsService {
   private readonly logger = new Logger(UploadsService.name);
 
-  constructor(private readonly uploadsRepo: UploadsRepository) {}
+  constructor(
+    private readonly uploadsRepo: UploadsRepository,
+    private readonly i18n: I18nService,
+  ) {}
 
   async uploadBuffer(
     buffer: Buffer,
@@ -20,7 +24,8 @@ export class UploadsService {
     folder = 'uploads',
   ): Promise<ImageDocument> {
     this.logger.log(`Starting upload: ${filename} to folder: ${folder}`);
-    if (!buffer) throw new BadRequestException('Buffer is required');
+    if (!buffer)
+      throw new BadRequestException(this.i18n.t('upload.bufferRequired'));
     this.logger.log(`Uploading to folder: ${folder}, filename: ${filename}`);
 
     try {
@@ -38,7 +43,7 @@ export class UploadsService {
     } catch (err) {
       this.logger.error('uploadBuffer failed', err);
       throw new InternalServerErrorException(
-        'Erro ao processar upload. Veja logs do servidor.',
+        this.i18n.t('upload.errorUploading'),
       );
     }
   }
