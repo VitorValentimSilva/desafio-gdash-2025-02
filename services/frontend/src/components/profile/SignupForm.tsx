@@ -14,6 +14,7 @@ import AvatarUpload from "./AvatarUpload";
 import { useState } from "react";
 import { resizeImage } from "@/lib/resizeImage";
 import { useUploadsApi } from "@/hooks/useUploadsApi";
+import { setUserId } from "@/lib/userStorage";
 
 export default function SignupForm() {
   const { create } = useUsersApi();
@@ -22,6 +23,7 @@ export default function SignupForm() {
 
   const [uploading, setUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState<number | null>(null);
+  const [showAvatar, setShowAvatar] = useState(false);
 
   const nav = useNavigate();
 
@@ -91,7 +93,8 @@ export default function SignupForm() {
       const { confirmPassword, ...payload } = data;
       void confirmPassword;
 
-      await create(payload as CreateUserPayload);
+      const res = await create(payload as CreateUserPayload);
+      if (res.user) setUserId(res.user.id);
       nav("/");
     } catch (err: unknown) {
       const message =
@@ -121,7 +124,6 @@ export default function SignupForm() {
           {...register("name")}
           placeholder={t("formCreate.namePlaceholder")}
           className="h-11"
-          required
         />
 
         <div className="text-sm text-red-600">{errors.name?.message}</div>
@@ -151,7 +153,6 @@ export default function SignupForm() {
           placeholder={t("formCreate.bioPlaceholder")}
           className="h-11"
           {...register("bio")}
-          required
         />
 
         <div className="text-sm text-red-600">{errors.bio?.message}</div>
@@ -166,24 +167,48 @@ export default function SignupForm() {
           placeholder={t("formCreate.locationPlaceholder")}
           className="h-11"
           {...register("location")}
-          required
         />
 
         <div className="text-sm text-red-600">{errors.location?.message}</div>
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="photo">gdfgdfgf</Label>
+        <div className="flex items-center justify-between">
+          <Label htmlFor="file">{t("formCreate.photoLabel")}</Label>
 
-        <AvatarUpload onFile={handleAvatarFile} initialUrl={null} />
+          <Button
+            variant="ghost"
+            size="sm"
+            type="button"
+            onClick={() => {
+              if (showAvatar) {
+                setValue("photo", "");
+                void handleAvatarFile(null);
+              }
+              setShowAvatar((s) => !s);
+            }}
+          >
+            {showAvatar ? t("formCreate.hidePhoto") : t("formCreate.addPhoto")}
+          </Button>
+        </div>
 
-        {uploading && (
-          <div className="text-sm text-muted-foreground mt-2">
-            Enviando... {uploadProgress != null ? `${uploadProgress}%` : null}
+        {showAvatar ? (
+          <>
+            <AvatarUpload onFile={handleAvatarFile} initialUrl={null} />
+            {uploading && (
+              <div className="text-sm text-muted-foreground mt-2">
+                {t("formUpdate.loading")}{" "}
+                {uploadProgress != null ? `${uploadProgress}%` : null}
+              </div>
+            )}
+
+            <div className="text-sm text-red-600">{errors.photo?.message}</div>
+          </>
+        ) : (
+          <div className="text-sm text-muted-foreground">
+            {t("formCreate.photoOptionalText")}
           </div>
         )}
-
-        <div className="text-sm text-red-600">{errors.photo?.message}</div>
       </div>
 
       <div className="space-y-2">

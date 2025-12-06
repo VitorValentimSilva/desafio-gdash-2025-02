@@ -33,12 +33,42 @@
     "locationPlaceholder": "your location",
     "passwordPlaceholder": "your password",
     "confirmPasswordPlaceholder": "confirm your password",
+    "photoLabel": "Profile Photo",
+    "hidePhoto": "Remove Photo",
+    "addPhoto": "Add Photo",
+    "photoOptionalText": "You can add a photo later if you want.",
+    "justImageText": "Only images are allowed.",
+    "maxMBText": "The maximum file size is {{maxMB}} MB.",
+    "noImage": "No photo",
+    "dragDropText": "Drag or drop here, JPEG/PNG up to {{maxMB}} MB",
+    "fileToChoose": "Choose file",
     "errors": {
       "unknownError": "An unknown error occurred. Please try again later.",
       "emailErrorInvalid": "Please enter a valid email.",
       "passwordErrorCharacters": "Password must be at least 6 characters long.",
       "confirmPasswordErrorMatch": "Passwords do not match.",
       "urlErrorInvalid": "Please enter a valid URL."
+    }
+  },
+  "formUpdate": {
+    "userInvalid": "Invalid user.",
+    "profileUpdated": "Profile updated successfully.",
+    "loading": "Loading...",
+    "uploadingImage": "Uploading image...",
+    "confirmExport": "Are you sure you want to export your data?",
+    "exportSuccess": "Data exported successfully.",
+    "confirmDelete": "Are you sure you want to delete your account? This action is irreversible.",
+    "deleteSuccess": "Account deleted successfully.",
+    "deleting": "Deleting...",
+    "exporting": "Exporting...",
+    "errors": {
+      "errorUpdatingProfile": "Error updating profile. Please try again later.",
+      "errorUserNotLoggedIn": "User is not logged in.",
+      "errorUserNotFound": "User not found.",
+      "errorLoadingProfile": "Error loading profile. Please try again later.",
+      "errorFormatExport": "Error with export format.",
+      "errorExport": "Error exporting data. Please try again later.",
+      "errorDeleteAccount": "Error deleting account. Please try again later."
     }
   },
   "menu": {

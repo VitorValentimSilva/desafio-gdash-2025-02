@@ -6,6 +6,7 @@ import type {
   UserResponse,
 } from "@/types/user";
 import { userService } from "@/services/userService";
+import type { TokenResponse } from "@/types/auth";
 
 export function useUsersApi() {
   const list = useCallback(
@@ -19,7 +20,7 @@ export function useUsersApi() {
     return userService.get(id);
   }, []);
 
-  const create = useCallback((dto: CreateUserDto): Promise<UserResponse> => {
+  const create = useCallback((dto: CreateUserDto): Promise<TokenResponse> => {
     return userService.create(dto);
   }, []);
 

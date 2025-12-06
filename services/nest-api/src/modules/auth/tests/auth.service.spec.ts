@@ -4,6 +4,11 @@ import { JwtService } from '@nestjs/jwt';
 import { UsersService, PublicUser } from '../../users/users.service';
 import { InternalServerErrorException } from '@nestjs/common';
 import { I18nService } from 'nestjs-i18n';
+import { mapToResponse } from '../../users/utils/user.mapper';
+
+jest.mock('../../users/utils/user.mapper', () => ({
+  mapToResponse: jest.fn(),
+}));
 
 describe('AuthService', () => {
   let service: AuthService;
@@ -14,6 +19,7 @@ describe('AuthService', () => {
   beforeEach(async () => {
     usersService = {
       validateCredentials: jest.fn(),
+      findById: jest.fn(),
     } as Partial<Record<keyof UsersService, jest.Mock>>;
 
     jwtService = {
@@ -34,6 +40,8 @@ describe('AuthService', () => {
     }).compile();
 
     service = module.get<AuthService>(AuthService);
+
+    (mapToResponse as jest.Mock).mockReset();
   });
 
   afterEach(() => {
@@ -82,26 +90,100 @@ describe('AuthService', () => {
   });
 
   describe('login', () => {
-    it('returns an access token (calls jwt.sign with correct payload)', () => {
+    it('returns access token and fallback user when findById returns null', async () => {
       const user: PublicUser = { id: 'abc', email: 'a@b.c', role: 'admin' };
       (jwtService.sign as jest.Mock).mockReturnValue('signed.token.here');
+      (usersService.findById as jest.Mock).mockResolvedValue(null);
 
-      const token = service.login(user);
-      expect(token).toEqual({ access_token: 'signed.token.here' });
+      const token = await service.login(user);
+      const now = new Date();
+
+      expect(token).toEqual({
+        access_token: 'signed.token.here',
+        user: {
+          id: user.id,
+          email: user.email,
+          role: user.role,
+          active: true,
+          name: undefined,
+          bio: undefined,
+          location: undefined,
+          photo: undefined,
+          createdAt: now,
+          updatedAt: now,
+        },
+      });
+
       expect(jwtService.sign).toHaveBeenCalledWith({
         sub: user.id,
         email: user.email,
         role: user.role,
       });
+
+      expect(usersService.findById).toHaveBeenCalledWith(user.id);
+      expect(mapToResponse).not.toHaveBeenCalled();
     });
 
-    it('throws InternalServerErrorException when jwt.sign throws', () => {
+    it('returns access token and mapped user when findById returns a PlainUser', async () => {
+      const user: PublicUser = { id: 'u1', email: 'u@x.y', role: 'user' };
+
+      const plainUser = {
+        _id: { toString: () => 'u1' },
+        email: 'u@x.y',
+        role: 'user',
+        active: true,
+        name: 'User Name',
+        bio: 'bio',
+        location: 'loc',
+        photo: 'photo.jpg',
+        createdAt: new Date('2020-01-01'),
+        updatedAt: new Date('2020-02-01'),
+        password: '****',
+      };
+
+      const mapped = {
+        id: 'u1',
+        email: 'u@x.y',
+        role: 'user',
+        active: true,
+        name: 'User Name',
+        bio: 'bio',
+        location: 'loc',
+        photo: 'photo.jpg',
+        createdAt: new Date('2020-01-01'),
+        updatedAt: new Date('2020-02-01'),
+      };
+
+      (jwtService.sign as jest.Mock).mockReturnValue('signed.token.here');
+      (usersService.findById as jest.Mock).mockResolvedValue(plainUser);
+      (mapToResponse as jest.Mock).mockReturnValue(mapped);
+
+      const token = await service.login(user);
+
+      expect(token).toEqual({
+        access_token: 'signed.token.here',
+        user: mapped,
+      });
+
+      expect(jwtService.sign).toHaveBeenCalledWith({
+        sub: user.id,
+        email: user.email,
+        role: user.role,
+      });
+
+      expect(usersService.findById).toHaveBeenCalledWith(user.id);
+      expect(mapToResponse).toHaveBeenCalledWith(plainUser);
+    });
+
+    it('throws InternalServerErrorException when jwt.sign throws', async () => {
       const user: PublicUser = { id: 'abc', email: 'a@b.c', role: 'admin' };
       (jwtService.sign as jest.Mock).mockImplementation(() => {
         throw new Error('sign failed');
       });
 
-      expect(() => service.login(user)).toThrow(InternalServerErrorException);
+      await expect(service.login(user)).rejects.toThrow(
+        InternalServerErrorException,
+      );
       expect(jwtService.sign).toHaveBeenCalled();
     });
   });

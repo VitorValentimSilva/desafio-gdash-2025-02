@@ -33,12 +33,42 @@
     "locationPlaceholder": "sua localização",
     "passwordPlaceholder": "sua senha",
     "confirmPasswordPlaceholder": "confirme sua senha",
+    "photoLabel": "Foto de Perfil",
+    "hidePhoto": "Remover Foto",
+    "addPhoto": "Adicionar Foto",
+    "photoOptionalText": "Você pode adicionar uma foto depois, se quiser.",
+    "justImageText": "Apenas imagens são permitidas.",
+    "maxMBText": "O tamanho máximo do arquivo é {{maxMB}} MB.",
+    "noImage": "Sem foto",
+    "dragDropText": "Arraste ou solte aqui, JPEG/PNG até {{maxMB}} MB",
+    "fileToChoose": "Escolher arquivo",
     "errors": {
       "unknownError": "Ocorreu um erro desconhecido. Por favor, tente novamente mais tarde.",
       "emailErrorInvalid": "Por favor, insira um email válido.",
       "passwordErrorCharacters": "A senha deve ter ao menos 6 caracteres.",
       "confirmPasswordErrorMatch": "As senhas não coincidem.",
       "urlErrorInvalid": "Por favor, insira uma URL válida."
+    }
+  },
+  "formUpdate": {
+    "userInvalid": "Usuário inválido.",
+    "profileUpdated": "Perfil atualizado com sucesso.",
+    "loading": "Carregando...",
+    "uploadingImage": "Enviando imagem...",
+    "confirmExport": "Você tem certeza que deseja exportar seus dados?",
+    "exportSuccess": "Dados exportados com sucesso.",
+    "confirmDelete": "Você tem certeza que deseja excluir sua conta? Esta ação é irreversível.",
+    "deleteSuccess": "Conta excluída com sucesso.",
+    "deleting": "Excluindo...",
+    "exporting": "Exportando...",
+    "errors": {
+      "errorUpdatingProfile": "Erro ao atualizar o perfil. Por favor, tente novamente mais tarde.",
+      "errorUserNotLoggedIn": "Usuário não está logado.",
+      "errorUserNotFound": "Usuário não encontrado.",
+      "errorLoadingProfile": "Erro ao carregar o perfil. Por favor, tente novamente mais tarde.",
+      "errorFormatExport": "Erro no formato dos dados para exportação. Por favor, tente novamente mais tarde.",
+      "errorExport": "Erro ao exportar dados.",
+      "errorDeleteAccount": "Erro ao excluir a conta. Por favor, tente novamente mais tarde."
     }
   },
   "menu": {

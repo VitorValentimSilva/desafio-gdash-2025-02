@@ -15,9 +15,7 @@ export const createUserSchema = (t: TFunction<"user">) =>
       name: z.string().optional(),
       bio: z.string().optional(),
       location: z.string().optional(),
-      photo: z
-        .url({ message: t("formCreate.errors.urlErrorInvalid") })
-        .optional(),
+      photo: z.string().optional().or(z.literal("")).nullable(),
     })
     .refine((data) => data.password === data.confirmPassword, {
       message: t("formCreate.errors.confirmPasswordErrorMatch"),

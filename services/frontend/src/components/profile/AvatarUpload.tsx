@@ -1,6 +1,6 @@
 import { useRef, useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
+import { useTranslation } from "react-i18next";
 
 type AvatarUploadProps = {
   initialUrl?: string | null;
@@ -15,6 +15,8 @@ export default function AvatarUpload({
   accept = "image/*",
   maxFileSizeMB = 5,
 }: AvatarUploadProps) {
+  const { t } = useTranslation("user");
+
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [preview, setPreview] = useState<string | null>(initialUrl);
   const [error, setError] = useState<string | null>(null);
@@ -28,10 +30,10 @@ export default function AvatarUpload({
 
   function validateFile(file: File) {
     if (!file.type.startsWith("image/")) {
-      return "Apenas imagens são permitidas";
+      return t("formCreate.justImageText");
     }
     if (file.size > maxFileSizeMB * 1024 * 1024) {
-      return `Máximo ${maxFileSizeMB} MB`;
+      return t("formCreate.maxMBText", { maxMB: maxFileSizeMB });
     }
     return null;
   }
@@ -56,8 +58,6 @@ export default function AvatarUpload({
 
   return (
     <div className="space-y-2">
-      <Label htmlFor="file">Foto de perfil</Label>
-
       <div
         onClick={() => inputRef.current?.click()}
         onDragOver={(e) => {
@@ -84,7 +84,9 @@ export default function AvatarUpload({
               className="w-full h-full object-cover"
             />
           ) : (
-            <span className="text-sm text-gray-500">Sem foto</span>
+            <span className="text-sm text-gray-500">
+              {t("formCreate.noImage")}
+            </span>
           )}
         </div>
 
@@ -95,7 +97,7 @@ export default function AvatarUpload({
               id="file"
               onClick={() => inputRef.current?.click()}
             >
-              Escolher arquivo
+              {t("formCreate.fileToChoose")}
             </Button>
             <Button
               variant="ghost"
@@ -106,11 +108,11 @@ export default function AvatarUpload({
                 onFile?.(null);
               }}
             >
-              Remover
+              {t("formCreate.hidePhoto")}
             </Button>
           </div>
           <p className="text-sm text-muted-foreground mt-2">
-            Arraste ou solte aqui, JPEG/PNG até {maxFileSizeMB}MB
+            {t("formCreate.dragDropText", { maxMB: maxFileSizeMB })}
           </p>
           {error && <div className="text-sm text-red-600 mt-2">{error}</div>}
         </div>

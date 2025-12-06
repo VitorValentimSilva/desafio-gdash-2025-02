@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { useAuthApi } from "@/hooks/useAuthApi";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { setUserId } from "@/lib/userStorage";
 
 export default function LoginForm() {
   const { login } = useAuthApi();
@@ -25,7 +26,8 @@ export default function LoginForm() {
 
   const onSubmit: SubmitHandler<LoginPayload> = async (data) => {
     try {
-      await login(data as LoginPayload);
+      const result = await login(data as LoginPayload);
+      if (result.user) setUserId(result.user.id);
       nav("/");
     } catch (err: unknown) {
       const message =

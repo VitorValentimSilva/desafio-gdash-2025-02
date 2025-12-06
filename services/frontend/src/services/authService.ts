@@ -1,16 +1,7 @@
 import api, { axios } from "@/services/api";
 import { setToken, clearToken } from "@/lib/tokenStorage";
 import type { LoginDto, TokenResponse } from "@/types/auth";
-
-function extractTokenFromResponse(data: unknown): string | undefined {
-  const response = data as Record<string, unknown>;
-  return (
-    (response?.accessToken as string | undefined) ??
-    (response?.access_token as string | undefined) ??
-    (response?.token as string | undefined) ??
-    ((response?.access as Record<string, unknown>)?.token as string | undefined)
-  );
-}
+import { extractTokenFromResponse, mapUserFromResponse } from "@/lib/userFunction";
 
 export const authService = {
   async login(payload: LoginDto): Promise<TokenResponse> {
@@ -27,10 +18,13 @@ export const authService = {
         );
       }
 
+      const user = mapUserFromResponse(data.user ?? data);
+
       const normalized: TokenResponse = {
         accessToken: token ?? "",
-        expiresIn: data?.expiresIn ?? data?.expires_in,
-        tokenType: data?.tokenType ?? data?.token_type,
+        expiresIn: (data?.expiresIn as number) ?? (data?.expires_in as number),
+        tokenType: (data?.tokenType as string) ?? (data?.token_type as string),
+        user,
       };
 
       return normalized;

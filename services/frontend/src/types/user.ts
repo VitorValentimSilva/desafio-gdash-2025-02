@@ -20,7 +20,7 @@ export interface CreateUserDto {
   name?: string;
   bio?: string;
   location?: string;
-  photo?: string;
+  photo?: string | null | undefined;
 }
 
 export interface UpdateUserDto {
