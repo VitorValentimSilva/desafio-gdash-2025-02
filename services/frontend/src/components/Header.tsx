@@ -3,7 +3,7 @@ import { CloudRain } from "lucide-react";
 import { getToken } from "@/lib/tokenStorage";
 import { ModeToggle } from "@/components/ui/mode-toggle";
 import MobileNav from "@/components/MobileNav";
-import ProfileModal from "@/components/ProfileModal";
+import ProfileModal from "@/components/profile/ProfileModal";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import { useTranslation } from "react-i18next";
 

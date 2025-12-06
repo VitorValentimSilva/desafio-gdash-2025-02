@@ -8,8 +8,8 @@ services:
       - "5672:5672"
       - "15672:15672"
     environment:
-      RABBITMQ_DEFAULT_USER: guest
-      RABBITMQ_DEFAULT_PASS: guest
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS}
     healthcheck:
       test: ["CMD", "rabbitmqctl", "status"]
       interval: 10s
@@ -40,11 +40,15 @@ services:
       - "3000:3000"
     environment:
       - NODE_ENV=development
-      - PORT=3000
-      - MONGO_URI=mongodb://mongo:27017/weather
-      - JWT_SECRET=${JWT_SECRET:-change_me}
-      - DEFAULT_ADMIN_EMAIL=${DEFAULT_ADMIN_EMAIL:-admin@example.com}
-      - DEFAULT_ADMIN_PASS=${DEFAULT_ADMIN_PASS:-123456}
+      - PORT=${PORT}
+      - MONGO_URI=${MONGO_URI}
+      - JWT_SECRET=${JWT_SECRET}
+      - JWT_EXPIRES_IN=${JWT_EXPIRES_IN}
+      - DEFAULT_ADMIN_EMAIL=${DEFAULT_ADMIN_EMAIL}
+      - DEFAULT_ADMIN_PASS=${DEFAULT_ADMIN_PASS}
+      - CLOUDINARY_CLOUD_NAME=${CLOUDINARY_CLOUD_NAME}
+      - CLOUDINARY_API_KEY=${CLOUDINARY_API_KEY}
+      - CLOUDINARY_API_SECRET=${CLOUDINARY_API_SECRET}
     depends_on:
       - mongo
     restart: unless-stopped
@@ -54,11 +58,11 @@ services:
   go-worker:
     build: ./services/go-worker
     environment:
-      - RABBITMQ_URL=amqp://guest:guest@rabbitmq:5672/
-      - RABBITMQ_QUEUE=weather_queue
-      - NEST_API_URL=http://nest-api:3000
-      - WORKER_MAX_RETRIES=3
-      - WORKER_HTTP_TIMEOUT_SECONDS=10
+      - RABBITMQ_URL=${RABBITMQ_URL}
+      - RABBITMQ_QUEUE=${RABBITMQ_QUEUE}
+      - NEST_API_URL=${NEST_API_URL}
+      - WORKER_MAX_RETRIES=${WORKER_MAX_RETRIES}
+      - WORKER_HTTP_TIMEOUT_SECONDS=${WORKER_HTTP_TIMEOUT_SECONDS}
     depends_on:
       - rabbitmq
       - nest-api
@@ -69,12 +73,12 @@ services:
   weather-producer:
     build: ./services/python-producer
     environment:
-      - LAT=-22.12556
-      - LON=-51.38889
-      - CITY=Presidente Prudente
-      - INTERVAL_SECONDS=3600
-      - RABBITMQ_URL=amqp://guest:guest@rabbitmq:5672/
-      - RABBITMQ_QUEUE=weather_queue
+      - LAT=${LAT}
+      - LON=${LON}
+      - CITY=${CITY}
+      - INTERVAL_SECONDS=${INTERVAL_SECONDS}
+      - RABBITMQ_URL=${RABBITMQ_URL}
+      - RABBITMQ_QUEUE=${RABBITMQ_QUEUE}
     depends_on:
       - rabbitmq
     restart: unless-stopped
@@ -84,6 +88,9 @@ services:
   frontend:
     build:
       context: ./services/frontend
+    environment:
+      - VITE_API_URL=${VITE_API_URL}
+      - VITE_DEFAULT_CITY=${CITY}
     container_name: frontend
     ports:
       - "5173:80"

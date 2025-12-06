@@ -1,7 +1,7 @@
 import { CloudRain } from "lucide-react";
 import { Card } from "@/components/ui/card";
-import LoginForm from "@/components/LoginForm";
-import SignupForm from "@/components/SignupForm";
+import LoginForm from "@/components/profile/LoginForm";
+import SignupForm from "@/components/profile/SignupForm";
 import { useNavigate } from "react-router-dom";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import { useTranslation } from "react-i18next";

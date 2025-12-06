@@ -7,6 +7,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import { PokeModule } from './modules/poke/poke.module';
 import { AcceptLanguageResolver, I18nModule, QueryResolver } from 'nestjs-i18n';
 import * as path from 'path';
+import { UploadsModule } from './modules/uploads/uploads.module';
 
 dotenv.config();
 
@@ -33,6 +34,7 @@ dotenv.config();
     UsersModule,
     AuthModule,
     PokeModule,
+    UploadsModule,
   ],
   controllers: [],
   providers: [],

@@ -45,9 +45,6 @@ async function bootstrap() {
     .setTitle(i18n.t('common.SwaggerTitle'))
     .setDescription(i18n.t('common.SwaggerDescription'))
     .setVersion(i18n.t('common.SwaggerVersion'))
-    .addTag(i18n.t('common.SwaggerTagPoke'))
-    .addTag(i18n.t('common.SwaggerTagUsers'))
-    .addTag(i18n.t('common.SwaggerTagAuth'))
     .addBearerAuth()
     .build();
 
