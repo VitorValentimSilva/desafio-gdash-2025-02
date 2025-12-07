@@ -192,7 +192,3 @@ E tudo funcionará automaticamente.
 - **Docker Compose**
 
 ---
-
-# ✅ Pronto!
-
-Se quiser melhorar, adicionar imagens, diagramas ou badges, posso gerar uma versão ainda mais profissional do README.
