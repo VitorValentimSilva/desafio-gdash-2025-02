@@ -10,9 +10,13 @@ import { useLanguage } from "@/hooks/useLanguage";
 
 export default function InsightsPanel() {
   const { logs, fetchLogs, loading: logsLoading } = useWeatherLogs(48);
-  const { insight, fetchInsight, loading: insightLoading } = useInsights(24);
-  const { t } = useTranslation("weather");
   const { locale } = useLanguage();
+  const {
+    insight,
+    fetchInsight,
+    loading: insightLoading,
+  } = useInsights(24, locale);
+  const { t } = useTranslation("weather");
 
   const computed = useComputedInsights(logs, t);
   const latest = logs?.[0];

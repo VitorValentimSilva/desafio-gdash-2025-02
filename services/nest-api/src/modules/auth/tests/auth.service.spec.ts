@@ -96,23 +96,29 @@ describe('AuthService', () => {
       (usersService.findById as jest.Mock).mockResolvedValue(null);
 
       const token = await service.login(user);
-      const now = new Date();
+      const now = Date.now();
 
-      expect(token).toEqual({
-        access_token: 'signed.token.here',
-        user: {
-          id: user.id,
-          email: user.email,
-          role: user.role,
-          active: true,
-          name: undefined,
-          bio: undefined,
-          location: undefined,
-          photo: undefined,
-          createdAt: now,
-          updatedAt: now,
-        },
+      expect(token.access_token).toBe('signed.token.here');
+
+      expect(token.user).toMatchObject({
+        id: user.id,
+        email: user.email,
+        role: user.role,
+        active: true,
+        name: undefined,
+        bio: undefined,
+        location: undefined,
+        photo: undefined,
       });
+
+      expect(token.user.createdAt).toBeInstanceOf(Date);
+      expect(token.user.updatedAt).toBeInstanceOf(Date);
+
+      const createdAtMs = token.user.createdAt.getTime();
+      const updatedAtMs = token.user.updatedAt.getTime();
+
+      expect(Math.abs(now - createdAtMs)).toBeLessThanOrEqual(1000);
+      expect(Math.abs(now - updatedAtMs)).toBeLessThanOrEqual(1000);
 
       expect(jwtService.sign).toHaveBeenCalledWith({
         sub: user.id,

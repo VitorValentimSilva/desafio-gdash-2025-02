@@ -1,0 +1,19 @@
+{
+  "noData": "Nenhum dado encontrado.",
+  "unknown": "Desconhecido",
+  "cold": "Frio",
+  "pleasant": "Agradável",
+  "warm": "Quente",
+  "hot": "Muito quente",
+  "highChanceOfRain": "Alta chance de chuva",
+  "extremeHeat": "Calor extremo",
+  "intenseCold": "Frio intenso",
+  "summary": {
+    "header": "Nos últimos {length} registros:",
+    "avgTemp": "Temperatura média: {value}°C",
+    "avgHum": "Umidade média: {value}%",
+    "trend": "Tendência: {value}",
+    "classification": "Classificação: {value}",
+    "comfort": "Índice de conforto: {value}"
+  }
+}

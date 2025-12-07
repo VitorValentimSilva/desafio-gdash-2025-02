@@ -13,6 +13,7 @@
   "buttonExportData": "Export Data",
   "buttonCancel": "Cancel",
   "buttonSaveChanges": "Save Changes",
+  "buttonLogout": "Log Out",
   "form": {
     "formTitle": "Create Account!",
     "formSubtitle": "Fill in the details to create your account",
@@ -51,6 +52,8 @@
     }
   },
   "formUpdate": {
+    "title": "Edit Profile",
+    "description": "Manage your profile information and preferences.",
     "userInvalid": "Invalid user.",
     "profileUpdated": "Profile updated successfully.",
     "loading": "Loading...",
@@ -74,5 +77,21 @@
   "menu": {
     "profile": "Profile",
     "settings": "Settings"
+  },
+  "pageUsers": {
+    "title": "Users",
+    "description": "Manage application users and their profiles.",
+    "searchPlaceholder": "Search users by name or email",
+    "table": {
+      "headerName": "Name",
+      "headerEmail": "Email",
+      "headerRole": "Role",
+      "status": "Status",
+      "headerActions": "Actions",
+      "noUsersFound": "No users found.",
+      "delete": "Delete User",
+      "active": "Active",
+      "inactive": "Inactive"
+    }
   }
 }

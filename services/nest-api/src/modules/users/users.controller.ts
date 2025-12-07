@@ -9,7 +9,6 @@ import {
   Query,
   UseGuards,
   Req,
-  ForbiddenException,
   Inject,
   forwardRef,
 } from '@nestjs/common';
@@ -132,13 +131,6 @@ export class UsersController {
     @Req() req: Request,
     @Res({ passthrough: true }) res: Response,
   ) {
-    const requester = (req.user as { id?: string; role?: string }) ?? {};
-    if (requester.id !== id) {
-      throw new ForbiddenException(
-        this.i18n.t('user.ExportingUser', { args: { id } }),
-      );
-    }
-
     const exportData = await this.usersService.exportUser(id);
 
     const filename = `user-${id}-export.json`;

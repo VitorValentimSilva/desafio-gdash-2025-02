@@ -5,14 +5,26 @@ import Pokedex from "@/pages/Pokedex";
 import Layout from "@/components/Layout";
 import { getToken } from "@/lib/tokenStorage";
 import AuthPage from "@/pages/AuthPage";
+import User from "@/pages/User";
+import { getUserRoleFromToken } from "@/lib/auth";
 
 interface PrivateRouteProps {
   children: React.ReactNode;
+  requiredRole?: string;
 }
 
-function PrivateRoute({ children }: PrivateRouteProps) {
+function PrivateRoute({ children, requiredRole }: PrivateRouteProps) {
   const token = getToken();
-  return token ? children : <Navigate to="/login" replace />;
+  if (!token) return <Navigate to="/login" replace />;
+
+  if (requiredRole) {
+    const role = getUserRoleFromToken();
+    if (role !== requiredRole) {
+      return <Navigate to="/" replace />;
+    }
+  }
+
+  return <>{children}</>;
 }
 
 export default function App() {
@@ -27,6 +39,16 @@ export default function App() {
             <PrivateRoute>
               <Layout>
                 <Dashboard />
+              </Layout>
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/users"
+          element={
+            <PrivateRoute requiredRole="admin">
+              <Layout>
+                <User />
               </Layout>
             </PrivateRoute>
           }

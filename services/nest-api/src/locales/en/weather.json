@@ -1,0 +1,19 @@
+{
+  "noData": "No data available",
+  "unknown": "Unknown",
+  "cold": "Cold",
+  "pleasant": "Pleasant",
+  "warm": "Warm",
+  "hot": "Hot",
+  "highChanceOfRain": "High chance of rain",
+  "extremeHeat": "Extreme heat",
+  "intenseCold": "Intense cold",
+  "summary": {
+    "header": "In the last {length} records:",
+    "avgTemp": "Average temperature: {value}°C",
+    "avgHum": "Average humidity: {value}%",
+    "trend": "Trend: {value}",
+    "classification": "Classification: {value}",
+    "comfort": "Comfort score: {value}"
+  }
+}

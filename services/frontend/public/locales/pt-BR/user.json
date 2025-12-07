@@ -13,6 +13,7 @@
   "buttonExportData": "Exportar Dados",
   "buttonCancel": "Cancelar",
   "buttonSaveChanges": "Salvar Alterações",
+  "buttonLogout": "Sair da conta",
   "form": {
     "formTitle": "Criar Conta!",
     "formSubtitle": "Preencha os dados para criar sua conta",
@@ -51,6 +52,8 @@
     }
   },
   "formUpdate": {
+    "title": "Editar Perfil",
+    "description": "Gerencie as informações e preferências do seu perfil.",
     "userInvalid": "Usuário inválido.",
     "profileUpdated": "Perfil atualizado com sucesso.",
     "loading": "Carregando...",
@@ -74,5 +77,21 @@
   "menu": {
     "profile": "Perfil",
     "settings": "Configurações"
+  },
+  "pageUsers": {
+    "title": "Gerenciamento de Usuários",
+    "description": "Visualize e gerencie todos os usuários registrados na plataforma.",
+    "searchPlaceholder": "Pesquisar usuários por nome ou email",
+    "table": {
+      "headerName": "Nome",
+      "headerEmail": "Email",
+      "headerRole": "Função",
+      "status": "Status",
+      "headerActions": "Ações",
+      "noUsersFound": "Nenhum usuário encontrado.",
+      "delete": "Excluir Usuário",
+      "active": "Ativo",
+      "inactive": "Inativo"
+    }
   }
 }

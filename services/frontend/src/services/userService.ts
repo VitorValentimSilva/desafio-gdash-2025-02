@@ -14,10 +14,25 @@ import type {
 
 export const userService = {
   async list(page = 1, limit = 20): Promise<PaginatedResult<UserResponse>> {
-    const { data } = await api.get<PaginatedResult<UserResponse>>("/users", {
-      params: { page, limit },
-    });
-    return data;
+    try {
+      const { data } = await api.get<PaginatedResult<UserResponse>>("/users", {
+        params: { page, limit },
+      });
+      return data;
+    } catch (err: unknown) {
+      if (axios.isAxiosError(err)) {
+        const respData = err.response?.data;
+        let message = err.message;
+        if (respData) {
+          if (typeof respData.message === "string") message = respData.message;
+          else if (Array.isArray(respData.message))
+            message = respData.message.join(" ");
+          else if (respData.error) message = respData.error;
+        }
+        throw new Error(message);
+      }
+      throw err;
+    }
   },
 
   async get(id: string): Promise<UserResponse | null> {
@@ -82,17 +97,64 @@ export const userService = {
   },
 
   async update(id: string, dto: UpdateUserDto): Promise<UserResponse> {
-    const { data } = await api.patch<UserResponse>(`/users/${id}`, dto);
-    return data;
+    try {
+      const { data } = await api.patch<UserResponse>(`/users/${id}`, dto);
+      return data;
+    } catch (err: unknown) {
+      if (axios.isAxiosError(err)) {
+        const respData = err.response?.data;
+        let message = err.message;
+        if (respData) {
+          if (typeof respData.message === "string") message = respData.message;
+          else if (Array.isArray(respData.message))
+            message = respData.message.join(" ");
+          else if (respData.error) message = respData.error;
+        }
+        throw new Error(message);
+      }
+      throw err;
+    }
   },
 
   async remove(id: string): Promise<UserResponse> {
-    const { data } = await api.delete<UserResponse>(`/users/${id}`);
-    return data;
+    try {
+      const { data } = await api.delete<UserResponse>(`/users/${id}`);
+      return data;
+    } catch (err: unknown) {
+      if (axios.isAxiosError(err)) {
+        const respData = err.response?.data;
+        let message = err.message;
+        if (respData) {
+          if (typeof respData.message === "string") message = respData.message;
+          else if (Array.isArray(respData.message))
+            message = respData.message.join(" ");
+          else if (respData.error) message = respData.error;
+        }
+        throw new Error(message);
+      }
+      throw err;
+    }
   },
 
   async exportUser(id: string) {
-    const resp = await api.get(`/users/${id}/export`, { responseType: "blob" });
-    return resp;
+    try {
+      const resp = await api.get(`/users/${id}/export`, {
+        responseType: "blob",
+      });
+      return resp;
+    } catch (err: unknown) {
+      if (axios.isAxiosError(err)) {
+        const respData = err.response?.data;
+        let message = err.message;
+        if (respData) {
+          if (typeof respData.message === "string") message = respData.message;
+          else if (Array.isArray(respData.message))
+            message = respData.message.join(" ");
+          else if (respData.error) message = respData.error;
+        }
+        throw new Error(message);
+      }
+      throw err;
+    }
   },
 };

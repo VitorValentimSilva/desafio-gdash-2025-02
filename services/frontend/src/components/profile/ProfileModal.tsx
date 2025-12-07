@@ -64,6 +64,12 @@ export default function ProfileModal({
     darkMode: false,
   });
 
+  const handleLogout = useCallback(() => {
+    clearToken();
+    clearUserId();
+    navigate("/login");
+  }, [navigate]);
+
   const handleAvatarFile = useCallback((file: File | null) => {
     setAvatarFile(file);
   }, []);
@@ -474,6 +480,16 @@ export default function ProfileModal({
                       {actionLoading.exporting
                         ? t("formUpdate.exporting")
                         : t("buttonExportData")}
+                    </Button>
+
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      className="w-full flex items-center justify-center gap-2"
+                      onClick={handleLogout}
+                    >
+                      <User className="w-4 h-4" />
+                      {t("buttonLogout")}
                     </Button>
                   </div>
                 </div>
